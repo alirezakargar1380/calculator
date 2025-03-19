@@ -1,47 +1,30 @@
 import * as Yup from 'yup';
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
-import { useMemo, useState, useEffect, useCallback } from 'react';
+import { useMemo, useState, useEffect } from 'react';
 
 import Box from '@mui/material/Box';
-import Chip from '@mui/material/Chip';
 import Card from '@mui/material/Card';
 import Stack from '@mui/material/Stack';
-import Switch from '@mui/material/Switch';
-import Divider from '@mui/material/Divider';
 import Grid from '@mui/material/Unstable_Grid2';
 import CardHeader from '@mui/material/CardHeader';
 import Typography from '@mui/material/Typography';
 import LoadingButton from '@mui/lab/LoadingButton';
 import InputAdornment from '@mui/material/InputAdornment';
-import FormControlLabel from '@mui/material/FormControlLabel';
-
-import { paths } from 'src/routes/paths';
-import { useRouter } from 'src/routes/hooks';
 
 import { useResponsive } from 'src/hooks/use-responsive';
 
 import {
   _tags,
-  PRODUCT_SIZE_OPTIONS,
   PRODUCT_GENDER_OPTIONS,
-  PRODUCT_COLOR_NAME_OPTIONS,
-  PRODUCT_CATEGORY_GROUP_OPTIONS,
 } from 'src/_mock';
 
 import { useSnackbar } from 'src/components/snackbar';
 import FormProvider, {
-  RHFSelect,
-  RHFEditor,
-  RHFUpload,
-  RHFSwitch,
   RHFTextField,
-  RHFMultiSelect,
-  RHFAutocomplete,
   RHFMultiCheckbox,
 } from 'src/components/hook-form';
 
-import { IProductItem } from 'src/types/product';
 import ChartSemi from '../_examples/extra/chart-view/chart-semi';
 import { IFormBMI } from 'src/types/bmi';
 
@@ -51,40 +34,29 @@ type Props = {
   currentData?: IFormBMI;
 };
 
-function calculateBMI(weight: number, heightCm: number, gender: string) {
-  const heightM = heightCm / 100; // تبدیل قد از سانتی‌متر به متر
-  const bmi = weight / (heightM ** 2);
-
-  // if (gender.toLowerCase() === "male") {
-  //     console.log(`BMI شما (مرد): ${bmi.toFixed(1)}`);
-  // } else if (gender.toLowerCase() === "female") {
-  //     console.log(`BMI شما (زن): ${bmi.toFixed(1)}`);
-  // } else {
-  //     console.log("جنسیت وارد شده معتبر نیست.");
-  // }
-  return bmi.toFixed(1);
-}
-
-export default function BMIForm({ currentData }: Props) {
-  const [bmi, setBmi] = useState(0);
+export default function HealthyWeightCalculatorForm({ currentData }: Props) {
+  const [result, setResult] = useState({
+    submit: false,
+    severely_underweight: 0,
+    underweight: 0,
+    normal: '',
+    overweight: '',
+    obese_class_i: '',
+    obese_class_ii: '',
+    obese_class_iii: '',
+  });
 
   const mdUp = useResponsive('up', 'md');
 
   const { enqueueSnackbar } = useSnackbar();
 
   const NewProductSchema = Yup.object().shape({
-    age: Yup.number().required('Age is required'),
     height: Yup.number().required('height is required'),
-    weight: Yup.number().required('weight is required'),
-    gender: Yup.string().required('gender is required'),
   });
 
   const defaultValues = useMemo(
     () => ({
-      age: currentData?.age || 20,
-      height: currentData?.height || 175,
-      weight: currentData?.weight || 80,
-      gender: currentData?.gender || 'men',
+      height: 175,
     }),
     [currentData]
   );
@@ -110,35 +82,44 @@ export default function BMIForm({ currentData }: Props) {
     }
   }, [currentData, defaultValues, reset]);
 
-  useEffect(() => { onSubmit() }, [])
-
   const onSubmit = handleSubmit(async (data) => {
     try {
-      setBmi(+calculateBMI(data.weight, data.height, data.gender));
-      // await new Promise((resolve) => setTimeout(resolve, 500));
-      // reset();
-      // enqueueSnackbar(currentData ? 'Update success!' : 'Create success!');
-      // router.push(paths.dashboard.product.root);
-      // console.info('DATA', data);
+
+      const severelyUnderweightThreshold = 16.0 * fHeight(data.height);
+      const underweightThreshold = 18.5 * fHeight(data.height);
+      const minHealthyWeight = 18.5 * fHeight(data.height);
+      const maxHealthyWeight = 24.9 * fHeight(data.height);
+      const overweightThreshold = 25.0 * fHeight(data.height);
+      const obeseClass1Threshold = 30.0 * fHeight(data.height);
+      const obeseClass2Threshold = 35.0 * fHeight(data.height);
+      const obeseClass3Threshold = 40.0 * fHeight(data.height);
+
+      setResult({
+        submit: true,
+        severely_underweight: severelyUnderweightThreshold,
+        underweight: underweightThreshold,
+        normal: `${minHealthyWeight.toFixed(1)} kg - ${maxHealthyWeight.toFixed(1)}`,
+        overweight: `${overweightThreshold.toFixed(1)} kg - ${obeseClass1Threshold.toFixed(1)}`,
+        obese_class_i: `${obeseClass1Threshold.toFixed(1)} kg - ${obeseClass2Threshold.toFixed(1)}`,
+        obese_class_ii: `${obeseClass2Threshold.toFixed(1)} kg - ${obeseClass3Threshold.toFixed(1)}`,
+        obese_class_iii: `${obeseClass3Threshold.toFixed(1)}`,
+      })
+
     } catch (error) {
       console.error(error);
     }
   });
 
+  const fHeight = (heightCm: number) => +((heightCm / 100) ** 2).toFixed(1)
+
   const renderProperties = (
     <>
 
-      <Grid xs={12} md={6}>
+      <Grid xs={12} md={5}>
         <Card>
           {!mdUp && <CardHeader title="Properties" />}
 
           <Stack spacing={3} sx={{ p: 3 }}>
-            <RHFTextField name="age" label="Age" />
-
-            <Stack spacing={1}>
-              <Typography variant="subtitle2">Gender</Typography>
-              <RHFMultiCheckbox row name="gender" spacing={2} options={PRODUCT_GENDER_OPTIONS} />
-            </Stack>
 
             <RHFTextField
               name="height"
@@ -157,23 +138,6 @@ export default function BMIForm({ currentData }: Props) {
               InputLabelProps={{ shrink: true }}
             />
 
-            <RHFTextField
-              name="weight"
-              label="Weight"
-              placeholder="0"
-              type="number"
-              InputProps={{
-                endAdornment: (
-                  <InputAdornment position="start">
-                    <Box component="span" sx={{ color: 'text.disabled' }}>
-                      Kg
-                    </Box>
-                  </InputAdornment>
-                ),
-              }}
-              InputLabelProps={{ shrink: true }}
-            />
-
             <LoadingButton type="submit" variant="contained" size="medium" sx={{ width: 'fit-content' }} loading={isSubmitting}>
               Calculate
             </LoadingButton>
@@ -182,8 +146,35 @@ export default function BMIForm({ currentData }: Props) {
         </Card>
       </Grid>
 
-      <Grid md={6}>
-        <ChartSemi bmi={bmi} />
+      <Grid md={7}>
+        {result.submit && (
+          <Box>
+            <Typography variant='h3' mb={1} bgcolor={'#1c905f'} borderRadius={'8px'} px={1}>Result:</Typography>
+            <Box whiteSpace={'break-spaces'}>
+              for weight {values.height} kg:
+              <br />
+              <br />
+              Severely Underweight Threshold: <b style={{ background: '#c72222' }}>Below {result.severely_underweight} kg</b>
+              <br />
+              Underweight Threshold: Below {result.underweight} kg
+              <br />
+              <Typography display={'flex'} alignItems={'center'}>
+                Healthy Weight Range:
+                <Typography variant='body1' ml={1} mb={1} width={'fit-content'} bgcolor={'#1c9035'} borderRadius={'8px'} px={1} my={1}>
+                  {result.normal} kg
+                </Typography>
+              </Typography>
+
+              Overweight Threshold: {result.overweight} kg
+              <br />
+              Obese Class I Threshold: {result.obese_class_i} kg
+              <br />
+              Obese Class II Threshold: {result.obese_class_ii} kg
+              <br />
+              Obese Class III Threshold: Above {result.obese_class_iii} kg
+            </Box>
+          </Box>
+        )}
       </Grid>
     </>
   );

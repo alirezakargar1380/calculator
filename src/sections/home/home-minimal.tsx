@@ -24,7 +24,11 @@ const CARDS = [
     items: [
       {
         title: 'BMI Calculator',
-        link: paths.comingSoon
+        link: paths.calculate.fitness.bmi
+      },
+      {
+        title: 'Healthy Weight Calculator',
+        link: paths.calculate.fitness.healthyWeightCalculator
       }
     ]
   },
