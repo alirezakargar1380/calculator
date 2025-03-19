@@ -29,7 +29,6 @@ type Props = {
 };
 
 export default function ChartSemi({ bmi = 48 }: Props) {
-  const theme = useTheme();
 
   // Determine color based on BMI value
   const getBmiColor = (bmiValue: number) => {

@@ -43,46 +43,50 @@ import FormProvider, {
 
 import { IProductItem } from 'src/types/product';
 import ChartSemi from '../_examples/extra/chart-view/chart-semi';
+import { IFormBMI } from 'src/types/bmi';
 
 // ----------------------------------------------------------------------
 
 type Props = {
-  currentProduct?: IProductItem;
+  currentData?: IFormBMI;
 };
 
-export default function BMIForm({ currentProduct }: Props) {
-  const router = useRouter();
+function calculateBMI(weight: number, heightCm: number, gender: string) {
+  const heightM = heightCm / 100; // تبدیل قد از سانتی‌متر به متر
+  const bmi = weight / (heightM ** 2);
+
+  // if (gender.toLowerCase() === "male") {
+  //     console.log(`BMI شما (مرد): ${bmi.toFixed(1)}`);
+  // } else if (gender.toLowerCase() === "female") {
+  //     console.log(`BMI شما (زن): ${bmi.toFixed(1)}`);
+  // } else {
+  //     console.log("جنسیت وارد شده معتبر نیست.");
+  // }
+  return bmi.toFixed(1);
+}
+
+export default function BMIForm({ currentData }: Props) {
+  const [bmi, setBmi] = useState(0);
 
   const mdUp = useResponsive('up', 'md');
 
   const { enqueueSnackbar } = useSnackbar();
 
   const NewProductSchema = Yup.object().shape({
-    name: Yup.string().required('Name is required'),
+    age: Yup.number().required('Age is required'),
+    height: Yup.number().required('height is required'),
+    weight: Yup.number().required('weight is required'),
+    gender: Yup.string().required('gender is required'),
   });
 
   const defaultValues = useMemo(
     () => ({
-      name: currentProduct?.name || '',
-      description: currentProduct?.description || '',
-      subDescription: currentProduct?.subDescription || '',
-      images: currentProduct?.images || [],
-      //
-      code: currentProduct?.code || '',
-      sku: currentProduct?.sku || '',
-      price: currentProduct?.price || 0,
-      quantity: currentProduct?.quantity || 0,
-      priceSale: currentProduct?.priceSale || 0,
-      tags: currentProduct?.tags || [],
-      taxes: currentProduct?.taxes || 0,
-      gender: currentProduct?.gender || '',
-      category: currentProduct?.category || '',
-      colors: currentProduct?.colors || [],
-      sizes: currentProduct?.sizes || [],
-      newLabel: currentProduct?.newLabel || { enabled: false, content: '' },
-      saleLabel: currentProduct?.saleLabel || { enabled: false, content: '' },
+      age: currentData?.age || 20,
+      height: currentData?.height || 175,
+      weight: currentData?.weight || 80,
+      gender: currentData?.gender || 'men',
     }),
-    [currentProduct]
+    [currentData]
   );
 
   const methods = useForm({
@@ -101,58 +105,25 @@ export default function BMIForm({ currentProduct }: Props) {
   const values = watch();
 
   useEffect(() => {
-    if (currentProduct) {
+    if (currentData) {
       reset(defaultValues);
     }
-  }, [currentProduct, defaultValues, reset]);
+  }, [currentData, defaultValues, reset]);
+
+  useEffect(() => { onSubmit() }, [])
 
   const onSubmit = handleSubmit(async (data) => {
     try {
-      await new Promise((resolve) => setTimeout(resolve, 500));
-      reset();
-      enqueueSnackbar(currentProduct ? 'Update success!' : 'Create success!');
-      router.push(paths.dashboard.product.root);
-      console.info('DATA', data);
+      setBmi(calculateBMI(data.weight, data.height, data.gender));
+      // await new Promise((resolve) => setTimeout(resolve, 500));
+      // reset();
+      // enqueueSnackbar(currentData ? 'Update success!' : 'Create success!');
+      // router.push(paths.dashboard.product.root);
+      // console.info('DATA', data);
     } catch (error) {
       console.error(error);
     }
   });
-
-  const renderDetails = (
-    <>
-      {mdUp && (
-        <Grid md={4}>
-          <Typography variant="h6" sx={{ mb: 0.5 }}>
-            Details
-          </Typography>
-          <Typography variant="body2" sx={{ color: 'text.secondary' }}>
-            Title, short description, image...
-          </Typography>
-        </Grid>
-      )}
-
-      <Grid xs={12} md={8}>
-        <Card>
-          {!mdUp && <CardHeader title="Details" />}
-
-          <Stack spacing={3} sx={{ p: 3 }}>
-            <RHFTextField name="name" label="Product Name" />
-
-            <RHFTextField name="subDescription" label="Sub Description" multiline rows={4} />
-
-            <Stack spacing={1.5}>
-              <Typography variant="subtitle2">Content</Typography>
-              <RHFEditor simple name="description" />
-            </Stack>
-
-            <Stack spacing={1.5}>
-              <Typography variant="subtitle2">Images</Typography>
-            </Stack>
-          </Stack>
-        </Card>
-      </Grid>
-    </>
-  );
 
   const renderProperties = (
     <>
@@ -162,7 +133,12 @@ export default function BMIForm({ currentProduct }: Props) {
           {!mdUp && <CardHeader title="Properties" />}
 
           <Stack spacing={3} sx={{ p: 3 }}>
-            <RHFTextField name="code" label="Product Code" />
+            <RHFTextField name="age" label="Age" />
+
+            <Stack spacing={1}>
+              <Typography variant="subtitle2">Gender</Typography>
+              <RHFMultiCheckbox row name="gender" spacing={2} options={PRODUCT_GENDER_OPTIONS} />
+            </Stack>
 
             <RHFTextField
               name="height"
@@ -182,7 +158,7 @@ export default function BMIForm({ currentProduct }: Props) {
             />
 
             <RHFTextField
-              name="quantity"
+              name="weight"
               label="Weight"
               placeholder="0"
               type="number"
@@ -198,11 +174,6 @@ export default function BMIForm({ currentProduct }: Props) {
               InputLabelProps={{ shrink: true }}
             />
 
-            <Stack spacing={1}>
-              <Typography variant="subtitle2">Gender</Typography>
-              <RHFMultiCheckbox row name="gender" spacing={2} options={PRODUCT_GENDER_OPTIONS} />
-            </Stack>
-
             <LoadingButton type="submit" variant="contained" size="medium" sx={{ width: 'fit-content' }} loading={isSubmitting}>
               Calculate
             </LoadingButton>
@@ -212,7 +183,7 @@ export default function BMIForm({ currentProduct }: Props) {
       </Grid>
 
       <Grid md={6}>
-        <ChartSemi bmi={24.9} />
+        <ChartSemi bmi={bmi} />
       </Grid>
     </>
   );

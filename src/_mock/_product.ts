@@ -1,9 +1,8 @@
 // ----------------------------------------------------------------------
 
 export const PRODUCT_GENDER_OPTIONS = [
-  { label: 'Men', value: 'Men' },
-  { label: 'Women', value: 'Women' },
-  { label: 'Kids', value: 'Kids' },
+  { label: 'Men', value: 'men' },
+  { label: 'Women', value: 'women' },
 ];
 
 export const PRODUCT_CATEGORY_OPTIONS = ['Shose', 'Apparel', 'Accessories'];
