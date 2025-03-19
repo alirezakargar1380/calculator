@@ -70,10 +70,6 @@ export default function HomeMinimal() {
         </m.div>
       </Stack>
 
-      <ChartSemi
-        series={[12]}
-      />
-
       <Box
         gap={{ xs: 3, lg: 10 }}
         display="grid"
