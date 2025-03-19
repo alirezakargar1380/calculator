@@ -1,4 +1,4 @@
-import HealthyWeightCalculatorView from "src/sections/healthy-weight-calculator/healthy-weight-calculator-view";
+import HealthyWeightCalculatorView from "src/sections/calculator/healthy-weight-calculator/healthy-weight-calculator-view";
 
 export const metadata = {
   title: 'Minimal: The starting point for your next project',
