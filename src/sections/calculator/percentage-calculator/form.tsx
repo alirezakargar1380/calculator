@@ -24,12 +24,15 @@ import FormProvider, {
 
 import { IFormBMI } from 'src/types/bmi';
 import PercentageOfNumberForm from './percentage-of-number';
+import WhatIsPercentageForm from './what-is-percentage';
 
 // ----------------------------------------------------------------------
 
 type Props = {
   currentData?: IFormBMI;
 };
+
+const md = 9;
 
 export default function PercentageCalculatorForm({ currentData }: Props) {
 
@@ -88,19 +91,23 @@ export default function PercentageCalculatorForm({ currentData }: Props) {
 
   const renderPercentageOfNumber = (
     <>
-      <Grid xs={12} md={7}>
+      <Grid xs={12} md={md}>
         <PercentageOfNumberForm />
       </Grid>
 
-      <Grid md={7} />
+      <Grid md={3} />
+
+      <Grid xs={12} md={md}>
+        <WhatIsPercentageForm />
+      </Grid>
+
+      <Grid md={3} />
     </>
   );
 
   return (
-    <FormProvider methods={methods} onSubmit={onSubmit}>
-      <Grid container spacing={3}>
-        {renderPercentageOfNumber}
-      </Grid>
-    </FormProvider>
+    <Grid container spacing={3}>
+      {renderPercentageOfNumber}
+    </Grid>
   );
 }
