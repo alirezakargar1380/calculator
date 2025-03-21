@@ -29,7 +29,11 @@ const CARDS = [
       {
         title: 'Healthy Weight Calculator',
         link: paths.calculate.fitness.healthyWeightCalculator
-      }
+      },
+      {
+        title: 'Pace Calculator',
+        link: paths.comingSoon
+      },
     ]
   },
   {
@@ -45,6 +49,22 @@ const CARDS = [
         title: 'Random Number Generator',
         link: paths.comingSoon
       },
+      {
+        title: 'Ratio Calculator',
+        link: paths.comingSoon
+      },
+      {
+        title: 'Log Calculator',
+        link: paths.comingSoon
+      },
+      {
+        title: 'Matrix Calculator',
+        link: paths.comingSoon
+      },
+      {
+        title: 'Big Number Generator',
+        link: paths.comingSoon
+      },
     ]
   },
   {
@@ -55,6 +75,22 @@ const CARDS = [
       {
         title: 'Loan Calculator',
         link: paths.calculate.financial.loan
+      },
+      {
+        title: 'Margin Calculator',
+        link: paths.comingSoon
+      },
+      {
+        title: 'Budget Calculator',
+        link: paths.comingSoon
+      },
+      {
+        title: 'Saving Calculator',
+        link: paths.comingSoon
+      },
+      {
+        title: 'Investment Calculator',
+        link: paths.comingSoon
       },
     ]
   }
