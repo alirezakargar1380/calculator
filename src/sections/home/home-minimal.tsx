@@ -43,14 +43,20 @@ const CARDS = [
       },
       {
         title: 'Random Number Generator',
-        link: paths.calculate.math.percentageCalculator
+        link: paths.comingSoon
       },
     ]
   },
   {
-    icon: ' /assets/icons/home/ic_development.svg',
+    icon: ' /assets/icons/home/40450-1067x800.jpg',
     title: 'Financial Calculators',
     description: 'Consistent design makes it easy to brand your own.',
+    items: [
+      {
+        title: 'Loan Calculator',
+        link: paths.calculate.financial.loan
+      },
+    ]
   }
 ];
 

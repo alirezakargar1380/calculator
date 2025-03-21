@@ -23,7 +23,7 @@ import FormProvider, {
 } from 'src/components/hook-form';
 
 import { IFormBMI } from 'src/types/bmi';
-import { fCurrency } from 'src/utils/format-number';
+import { formant } from 'src/utils/format-number';
 
 // ----------------------------------------------------------------------
 
@@ -124,7 +124,7 @@ export default function WhatIsPercentageForm({ currentData }: Props) {
                             label="number"
                             placeholder="0"
                             type="number"
-                            helperText={fCurrency(values.number)}
+                            helperText={formant(values.number)}
                             sx={{ width: 150, mx: 2 }}
                             InputLabelProps={{ shrink: true }}
                         />
@@ -138,7 +138,7 @@ export default function WhatIsPercentageForm({ currentData }: Props) {
                             placeholder="0"
                             type="number"
                             disabled
-                            helperText={fCurrency(values.result || 0)}
+                            helperText={formant(values.result || 0)}
                             sx={{ width: 150, mx: 2 }}
                             //   InputProps={{
                             //     endAdornment: (

@@ -8,8 +8,14 @@ export function fNumber(number: InputValue) {
   return numeral(number).format();
 }
 
+export function formant(number: InputValue) {
+  const format = number ? numeral(number).format('0,0') : '';
+
+  return result(format);
+}
+
 export function fCurrency(number: InputValue) {
-  const format = number ? numeral(number).format('0,0.00') : '';
+  const format = number ? numeral(number).format('$0,0') : '';
 
   return result(format);
 }

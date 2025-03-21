@@ -57,6 +57,9 @@ export const paths = {
     },
     math: {
       percentageCalculator: '/math/percentage-calculator/',
+    },
+    financial: {
+      loan: '/financial/loan-calculator'
     }
   },
   // AUTH
