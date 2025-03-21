@@ -50,6 +50,15 @@ export const paths = {
       details: `/post/${paramCase(MOCK_TITLE)}`,
     },
   },
+  calculate: {
+    fitness: {
+      bmi: '/fitness/bmi-calculator/',
+      healthyWeightCalculator: '/fitness/healthy-weight-calculator/',
+    },
+    math: {
+      percentageCalculator: '/math/percentage-calculator/',
+    }
+  },
   // AUTH
   auth: {
     amplify: {

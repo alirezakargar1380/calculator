@@ -19,7 +19,7 @@ import ChartSemi from '../_examples/extra/chart-view/chart-semi';
 const CARDS = [
   {
     icon: ' /assets/icons/home/health-logo-fitness.jpg',
-    title: 'Fitness & Health',
+    title: 'Fitness & Health Calculators',
     description: 'Consistent design makes it easy to brand your own.',
     items: [
       {
@@ -33,13 +33,23 @@ const CARDS = [
     ]
   },
   {
-    icon: ' /assets/icons/home/ic_design.svg',
-    title: 'UI & UX Design',
-    description: 'Consistent design makes it easy to brand your own.',
+    icon: ' /assets/icons/home/math-illustration.jpg',
+    title: 'Math Calculators',
+    description: 'the useful mathamatics formoula are here to use!',
+    items: [
+      {
+        title: 'Percentage Calculator',
+        link: paths.calculate.math.percentageCalculator
+      },
+      {
+        title: 'Random Number Generator',
+        link: paths.calculate.math.percentageCalculator
+      },
+    ]
   },
   {
     icon: ' /assets/icons/home/ic_development.svg',
-    title: 'Development',
+    title: 'Financial Calculators',
     description: 'Consistent design makes it easy to brand your own.',
   }
 ];

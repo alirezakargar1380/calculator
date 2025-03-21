@@ -41,9 +41,8 @@ import FormProvider, {
   RHFMultiCheckbox,
 } from 'src/components/hook-form';
 
-import { IProductItem } from 'src/types/product';
-import ChartSemi from '../_examples/extra/chart-view/chart-semi';
 import { IFormBMI } from 'src/types/bmi';
+import ChartSemi from 'src/sections/_examples/extra/chart-view/chart-semi';
 
 // ----------------------------------------------------------------------
 
