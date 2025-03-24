@@ -1,7 +1,7 @@
 import * as Yup from 'yup';
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
-import { useMemo, useEffect } from 'react';
+import { useMemo, useEffect, useState } from 'react';
 
 import Box from '@mui/material/Box';
 import Card from '@mui/material/Card';
@@ -23,6 +23,7 @@ import FormProvider, {
 } from 'src/components/hook-form';
 
 import { IFormBMI } from 'src/types/bmi';
+import { Typography } from '@mui/material';
 
 // ----------------------------------------------------------------------
 
@@ -32,21 +33,20 @@ type Props = {
 
 export default function PercentageDifferenceForm({ currentData }: Props) {
 
-  const mdUp = useResponsive('up', 'md');
+  const [diff, setDiff] = useState(0);
+  const [increase, setIncrease] = useState(0);
 
   const { enqueueSnackbar } = useSnackbar();
 
   const NewProductSchema = Yup.object().shape({
-    number: Yup.number().required('number is required'),
-    percentage: Yup.number().required('percentage is required'),
-    result: Yup.number(),
+    value_1: Yup.number().required('value 1 is required'),
+    value_2: Yup.number().required('value 2 is required'),
   });
 
   const defaultValues = useMemo(
     () => ({
-      percentage: 20,
-      number: 120,
-      result: 24,
+      value_1: 0,
+      value_2: 0,
     }),
     [currentData]
   );
@@ -61,7 +61,7 @@ export default function PercentageDifferenceForm({ currentData }: Props) {
     watch,
     setValue,
     handleSubmit,
-    formState: { isSubmitting },
+    formState: { isSubmitting, isSubmitted },
   } = methods;
 
   const values = watch();
@@ -74,7 +74,11 @@ export default function PercentageDifferenceForm({ currentData }: Props) {
 
   const onSubmit = handleSubmit(async (data) => {
     try {
-      setValue('result', data.number * (data.percentage / 100));
+      const val_1_and_2_diff = ((data.value_1 - data.value_2) / ((data.value_1 + data.value_2) / 2)) * 100;
+      setDiff(Math.abs(val_1_and_2_diff));
+
+      const increace = ((data.value_1 - data.value_2) / data.value_1) * 100;
+      setIncrease(Math.abs(increace));
 
       enqueueSnackbar('Done!', {
         variant: 'info'
@@ -88,70 +92,42 @@ export default function PercentageDifferenceForm({ currentData }: Props) {
   return (
     <FormProvider methods={methods} onSubmit={onSubmit}>
       <Card>
-        <CardHeader title="Percentage of Number" />
+        <CardHeader title="Percentage Difference" />
 
-        <Box sx={{ p: 3 }}>
-          <Box sx={{ alignItems: 'center', display: 'flex' }}>
+        <Stack sx={{ p: 3 }} spacing={2}>
 
-            <RHFTextField
-              name="percentage"
-              variant='filled'
-              label={'percentage'}
-              placeholder="0"
-              type="number"
-              sx={{ mr: 2, width: 160 }}
-              InputProps={{
-                endAdornment: (
-                  <InputAdornment position="start" sx={{
-                    // m: 0
-                  }}>
-                    <Box component="span" sx={{ color: 'text.disabled' }}>
-                      %
-                    </Box>
-                  </InputAdornment>
-                ),
-              }}
-              InputLabelProps={{ shrink: true }}
-            />
+          <RHFTextField
+            name="value_1"
+            variant='filled'
+            label={'Value 1'}
+            placeholder="0"
+            type="number"
+            sx={{ mr: 2, width: 1 }}
+            InputLabelProps={{ shrink: true }}
+          />
 
-            <Box>of</Box>
+          <RHFTextField
+            name="value_2"
+            variant='filled'
+            label={'Value 2'}
+            placeholder="0"
+            type="number"
+            sx={{ mr: 2, width: 1 }}
+            InputLabelProps={{ shrink: true }}
+          />
 
-            <RHFTextField
-              name="number"
-              variant='filled'
-              label="number"
-              placeholder="0"
-              type="number"
-              sx={{ width: 150, mx: 2 }}
-              InputLabelProps={{ shrink: true }}
-            />
+          {(isSubmitted) && (
+            <Box>
+              <Typography bgcolor={'greenyellow'} padding={2} mb={2}>Result</Typography>
+              <Typography display={'flex'} gap={1}>Difference of {values.value_1} and {values.value_2} are <Box color='Highlight'>{diff}%</Box></Typography>
+              <Typography display={'flex'} gap={1}>{values.value_2} is a <Box color='Highlight'>{increase}%</Box> increase of {values.value_1}</Typography>
+            </Box>
+          )}
 
-            <Box>=</Box>
-
-            <RHFTextField
-              name="result"
-              variant='filled'
-              label="result"
-              placeholder="0"
-              type="number"
-              disabled
-              sx={{ width: 150, mx: 2 }}
-              InputProps={{
-                endAdornment: (
-                  <InputAdornment position="start">
-                    <Box component="span" sx={{ color: 'text.disabled' }}>
-                      %
-                    </Box>
-                  </InputAdornment>
-                ),
-              }}
-              InputLabelProps={{ shrink: true }}
-            />
-          </Box>
           <LoadingButton type="submit" variant="contained" size="medium" sx={{ width: 'fit-content', mt: 3 }} loading={isSubmitting}>
             Calculate
           </LoadingButton>
-        </Box>
+        </Stack>
 
       </Card>
     </FormProvider>
