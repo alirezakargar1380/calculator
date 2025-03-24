@@ -155,5 +155,104 @@ function displayLoanDetails(loanDetails) {
 }
 
 // Example: $200,000 loan for 30 years (36 months) at 4.5% interest
-const loanExample = calculateLoan(1000000000, 12, 4);
-displayLoanDetails(loanExample);
+// const loanExample = calculateLoan(1000000000, 12, 4);
+// displayLoanDetails(loanExample);
+
+
+
+// ============ savings calculator
+
+// monthly
+
+// const principal = 20000; // Initial amount
+// const monthlyRate = 0.03; // 3% monthly interest rate
+// const months = 12; // Number of months
+
+// let balance = principal;
+// console.log("Month\tInterest\tBalance");
+
+// for (let month = 1; month <= months; month++) {
+//     const interest = balance * monthlyRate; // Calculate interest
+//     balance += interest; // Update balance
+//     console.log(`${month}\t$${interest.toFixed(2) / 12}\t\t$${balance.toFixed(2)}`);
+// }
+
+// daily
+
+// Constants
+// let principal = 20000; // initial amount
+// const dailyRate = 1.03 / 365; // daily interest rate (3% annual)
+// const daysInMonth = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31]; // number of days in each month
+// const output = [];
+
+// Function to calculate compound interest over one month
+// function calculateMonthlyCompoundInterest(principal, dailyRate, days) {
+//     let balance = principal * Math.pow((1 + dailyRate), days);
+//     let interest = balance - principal;
+//     return {
+//         interest: interest,
+//         balance: balance
+//     };
+// }
+
+// Calculate for each month
+// for (let month = 0; month < 12; month++) {
+//     const days = 31;
+//     // const days = daysInMonth[month];
+//     const result = calculateMonthlyCompoundInterest(principal, dailyRate, days);
+//     output.push({
+//         month: month + 1,
+//         // interest: result.interest,
+//         // balance: result.balance,
+//         interest: result.interest.toFixed(2),
+//         balance: result.balance.toFixed(2)
+//     });
+//     // Update principal for next month
+//     principal = result.balance;
+// }
+
+// Print output
+// console.log("Month   Interest        Balance");
+// output.forEach(entry => {
+//     console.log(`${entry.month}       $${entry.interest}           $${entry.balance}`);
+// });
+
+//  ============================================= monthly
+// let amount = 20000; // Initial amount
+// let annualInterestRate = 0.03; // Annual interest rate
+// let monthlyInterestRate = annualInterestRate / 12; // Monthly interest rate
+// // let dailyInterestRate = annualInterestRate / 30; // Daily interest rate
+
+// console.log("Month   Interest        Balance");
+// for (let month = 1; month <= 12; month++) {
+//     // let interest = amount * monthlyInterestRate; // Calculate interest for the month
+//     let interest = amount * dailyInterestRate; // Calculate interest for the day
+//     amount += interest; // Update balance
+//     console.log(`${month.toString().padStart(5)} $${interest.toFixed(2).padStart(10)} $${amount.toFixed(2).padStart(11)}`);
+// }
+
+// =============================================== daily
+let principal = 20000; // Initial amount
+const annualRate = 3 / 100; // 3% annual interest
+const daysInYear = 365; // Days in a year
+const dailyRate = annualRate / daysInYear; // Daily interest rate
+
+let innn = 0;
+
+console.log("Month   Interest        Balance");
+
+// Calculate interest and balance for each month
+for (let month = 1; month <= 12; month++) {
+    const daysInMonth = new Date(2025, month, 0).getDate(); // Get number of days in the month
+    const interest = principal * (Math.pow((1 + dailyRate), daysInMonth) - 1); // Compound interest for the month
+    const balance = principal + interest; // Total balance after interest
+    
+    innn += +interest.toFixed(2)
+
+    console.log(`${month}       $${interest.toFixed(2)}           $${balance.toFixed(2)}`);
+    
+    // Update principal for the next month's calculation
+    principal = balance; // New principal is the balance after interest
+}
+
+console.log(innn.toFixed(2))

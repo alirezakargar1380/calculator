@@ -40,7 +40,7 @@ const CARDS = [
         link: paths.comingSoon
       },
       {
-        title: 'Pace Calculator',
+        title: 'Pace Calculator (Coming Soon)',
         link: paths.comingSoon
       },
     ]
@@ -71,7 +71,7 @@ const CARDS = [
         link: paths.comingSoon
       },
       {
-        title: 'Big Number Generator',
+        title: 'Big Number Generator (Coming Soon)',
         link: paths.comingSoon
       },
     ]
@@ -86,19 +86,19 @@ const CARDS = [
         link: paths.calculate.financial.loan
       },
       {
-        title: 'Margin Calculator',
+        title: 'Margin Calculator (Coming Soon)',
         link: paths.comingSoon
       },
       {
-        title: 'Budget Calculator',
+        title: 'Budget Calculator (Coming Soon)',
         link: paths.comingSoon
       },
       {
-        title: 'Saving Calculator',
+        title: 'Saving Calculator (Coming Soon)',
         link: paths.comingSoon
       },
       {
-        title: 'Investment Calculator',
+        title: 'Investment Calculator (Coming Soon)',
         link: paths.comingSoon
       },
     ]
