@@ -26,6 +26,7 @@ import { IFormBMI } from 'src/types/bmi';
 import { formant } from 'src/utils/format-number';
 import WhatIsPercentageForm1 from './what-is-percentage-form-1';
 import WhatIsPercentageForm2 from './what-is-percentage-form-2';
+import WhatIsPercentageForm3 from './what-is-percentage-form-3';
 
 // ----------------------------------------------------------------------
 
@@ -94,6 +95,7 @@ export default function WhatIsPercentageForm({ currentData }: Props) {
             <Stack sx={{ p: 3 }} spacing={6}>
                 <WhatIsPercentageForm1 />
                 <WhatIsPercentageForm2 />
+                <WhatIsPercentageForm3 />
 
             </Stack>
 

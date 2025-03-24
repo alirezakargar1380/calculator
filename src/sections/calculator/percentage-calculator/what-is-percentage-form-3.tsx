@@ -24,6 +24,7 @@ import FormProvider, {
 
 import { IFormBMI } from 'src/types/bmi';
 import { formant } from 'src/utils/format-number';
+import { Typography } from '@mui/material';
 
 // ----------------------------------------------------------------------
 
@@ -31,7 +32,7 @@ type Props = {
     currentData?: IFormBMI;
 };
 
-export default function WhatIsPercentageForm1({ currentData }: Props) {
+export default function WhatIsPercentageForm3({ currentData }: Props) {
 
     const { enqueueSnackbar } = useSnackbar();
 
@@ -73,7 +74,7 @@ export default function WhatIsPercentageForm1({ currentData }: Props) {
 
     const onSubmit = handleSubmit(async (data) => {
         try {
-            setValue('result', (data.percentage / 100) * data.number);
+            setValue('result', (data.number / data.percentage * 100));
 
             enqueueSnackbar('Done!', {
                 variant: 'info'
@@ -88,7 +89,20 @@ export default function WhatIsPercentageForm1({ currentData }: Props) {
         <FormProvider methods={methods} onSubmit={onSubmit}>
             <Box sx={{ alignItems: 'center', display: 'flex' }}>
 
-                <Box sx={{ mb: 3 }}>what is</Box>
+
+
+                <RHFTextField
+                    name="number"
+                    variant='filled'
+                    label="number"
+                    placeholder="0"
+                    type="number"
+                    helperText={formant(values.number)}
+                    sx={{ width: 240, mr: 2 }}
+                    InputLabelProps={{ shrink: true }}
+                />
+
+                <Box sx={{ mb: 3 }}>is</Box>
 
                 <RHFTextField
                     name="percentage"
@@ -97,7 +111,7 @@ export default function WhatIsPercentageForm1({ currentData }: Props) {
                     placeholder="0"
                     type="number"
                     helperText={' '}
-                    sx={{ mx: 2, width: 160 }}
+                    sx={{ ml: 2, width: 240 }}
                     InputProps={{
                         endAdornment: (
                             <InputAdornment position="start">
@@ -110,44 +124,16 @@ export default function WhatIsPercentageForm1({ currentData }: Props) {
                     InputLabelProps={{ shrink: true }}
                 />
 
-                <Box sx={{ mb: 3 }}>of</Box>
+                <Box sx={{ mb: 3, mx: 2 }}>of what</Box>
 
-                <RHFTextField
-                    name="number"
-                    variant='filled'
-                    label="number"
-                    placeholder="0"
-                    type="number"
-                    helperText={formant(values.number)}
-                    sx={{ width: 150, mx: 2 }}
-                    InputLabelProps={{ shrink: true }}
-                />
-
-                <Box sx={{ mb: 3 }}>=</Box>
-
-                <RHFTextField
-                    name="result"
-                    variant='filled'
-                    label="result"
-                    placeholder="0"
-                    type="number"
-                    disabled
-                    helperText={formant(values.result || 0)}
-                    sx={{ width: 150, mx: 2 }}
-                    //   InputProps={{
-                    //     endAdornment: (
-                    //       <InputAdornment position="start">
-                    //         <Box component="span" sx={{ color: 'text.disabled' }}>
-                    //           %
-                    //         </Box>
-                    //       </InputAdornment>
-                    //     ),
-                    //   }}
-                    InputLabelProps={{ shrink: true }}
-                />
                 <LoadingButton type="submit" variant="contained" size="large" sx={{ width: 'fit-content', mb: 3.5 }} loading={isSubmitting}>
                     Calculate
                 </LoadingButton>
+            </Box>
+
+            <Box mt={2}>
+                <Typography bgcolor={'greenyellow'} padding={2} mb={2}>Result</Typography>
+                <Typography display={'flex'} gap={1}>{values.number} is <Box color='Highlight'>{values.percentage}%</Box> of <Box color='Highlight'>{values.result}</Box></Typography>
             </Box>
 
         </FormProvider>
