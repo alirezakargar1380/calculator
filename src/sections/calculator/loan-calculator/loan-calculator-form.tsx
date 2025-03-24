@@ -205,15 +205,6 @@ export default function LoanCalculatorForm({ currentData }: Props) {
               label="number of installments"
               placeholder="0"
               type="number"
-              InputProps={{
-                endAdornment: (
-                  <InputAdornment position="start">
-                    <Box component="span" sx={{ color: 'text.disabled' }}>
-                      Cm
-                    </Box>
-                  </InputAdornment>
-                ),
-              }}
               InputLabelProps={{ shrink: true }}
             />
 
