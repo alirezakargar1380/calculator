@@ -57,6 +57,7 @@ export const paths = {
     },
     math: {
       percentageCalculator: '/math/percentage-calculator/',
+      randomNumber: '/math/random-number/',
     },
     financial: {
       loan: '/financial/loan-calculator'

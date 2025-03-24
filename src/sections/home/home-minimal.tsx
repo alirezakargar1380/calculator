@@ -47,7 +47,7 @@ const CARDS = [
       },
       {
         title: 'Random Number Generator',
-        link: paths.comingSoon
+        link: paths.calculate.math.randomNumber
       },
       {
         title: 'Ratio Calculator',
