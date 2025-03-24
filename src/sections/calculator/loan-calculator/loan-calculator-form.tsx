@@ -219,7 +219,7 @@ export default function LoanCalculatorForm({ currentData }: Props) {
 
             <RHFTextField
               name="rate"
-              label="return rate"
+              label="interest rate"
               placeholder="0"
               type="number"
               InputProps={{
