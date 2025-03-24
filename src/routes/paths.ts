@@ -54,6 +54,8 @@ export const paths = {
     fitness: {
       bmi: '/fitness/bmi-calculator/',
       healthyWeightCalculator: '/fitness/healthy-weight-calculator/',
+      pregnancy: '/fitness/pregnancy/',
+      period: '/fitness/period-calculator/',
     },
     math: {
       percentageCalculator: '/math/percentage-calculator/',

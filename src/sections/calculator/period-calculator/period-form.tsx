@@ -23,14 +23,16 @@ import { useSnackbar } from 'src/components/snackbar';
 import FormProvider, {
   RHFTextField,
   RHFMultiCheckbox,
+  RHFSelect,
 } from 'src/components/hook-form';
 
 import ChartSemi from '../../_examples/extra/chart-view/chart-semi';
 import { IFormBMI } from 'src/types/bmi';
-import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from '@mui/material';
+import { MenuItem, Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from '@mui/material';
 import Scrollbar from 'src/components/scrollbar';
 import { fCurrency, formant } from 'src/utils/format-number';
 import IncrementerButton from '../common/incrementer-button';
+import { DatePicker } from '@mui/x-date-pickers';
 
 // ----------------------------------------------------------------------
 
@@ -38,7 +40,7 @@ type Props = {
   currentData?: IFormBMI;
 };
 
-export default function RandomNumberForm({ currentData }: Props) {
+export default function PregnancyForm({ currentData }: Props) {
   const [result, setResult] = useState<any>(0);
 
   const mdUp = useResponsive('up', 'md');
@@ -46,14 +48,14 @@ export default function RandomNumberForm({ currentData }: Props) {
   const { enqueueSnackbar } = useSnackbar();
 
   const NewProductSchema = Yup.object().shape({
-    lower: Yup.number().required('lower is required'),
-    upper: Yup.number().required('upper is required'),
+    date: Yup.date().required('lower is required'),
+    based: Yup.string().required('based is required'),
   });
 
   const defaultValues = useMemo(
     () => ({
-      lower: 3,
-      upper: 100
+      date: new Date(),
+      based: '1'
     }),
     [currentData]
   );
@@ -82,11 +84,6 @@ export default function RandomNumberForm({ currentData }: Props) {
   const onSubmit = handleSubmit(async (data) => {
     try {
 
-      // randon number js
-      const randomNumber = Math.floor(Math.random() * (data.upper - data.lower + 1)) + data.lower;
-
-      setResult(randomNumber);
-
     } catch (error) {
       console.error(error);
     }
@@ -106,32 +103,28 @@ export default function RandomNumberForm({ currentData }: Props) {
             <br />
             <br />
             <Stack spacing={3} direction={'row'}>
-              <Box>
-                <Typography variant="subtitle2" sx={{ flexGrow: 1, mb: 1 }}>
-                  Lower Limit
-                </Typography>
-                <IncrementerButton
-                  name="lower"
-                  // quantity={values.lower}
-                  // disabledDecrease={values.lower <= 1}
-                  // disabledIncrease={values.lower >= 0}
-                  onIncrease={() => setValue('lower', values.lower + 1)}
-                  onDecrease={() => setValue('lower', values.lower - 1)}
-                />
-              </Box>
-              <Box>
-                <Typography variant="subtitle2" sx={{ flexGrow: 1, mb: 1 }}>
-                  Upper Limit
-                </Typography>
-                <IncrementerButton
-                  name="upper"
-                  // quantity={values.upper}
-                  // disabledDecrease={values.lower <= 1}
-                  // disabledIncrease={values.lower >= 0}
-                  onIncrease={() => setValue('upper', values.upper + 1)}
-                  onDecrease={() => setValue('upper', values.upper - 1)}
-                />
-              </Box>
+
+              <RHFSelect name='based' label="Calculate Based on" size="medium">
+                <MenuItem value={'1'}>Due Date</MenuItem>
+                <MenuItem value={'2'}>Last period</MenuItem>
+              </RHFSelect>
+
+              <DatePicker
+                openTo="year"
+                views={['year', 'month', 'day']}
+                label="Year, month and date"
+                value={values.date}
+                onChange={(newValue) => {
+                  if (newValue)
+                    setValue("date", newValue);
+                }}
+                slotProps={{
+                  textField: {
+                    fullWidth: true,
+                    // margin: 'normal',
+                  },
+                }}
+              />
 
             </Stack>
             <LoadingButton type="submit" variant="contained" size="medium" sx={{ width: 'fit-content', mt: 3 }} loading={isSubmitting}>

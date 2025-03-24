@@ -31,6 +31,15 @@ const CARDS = [
         link: paths.calculate.fitness.healthyWeightCalculator
       },
       {
+        title: 'Period Calculator',
+        link: paths.calculate.fitness.period
+      },
+      {
+        title: 'Pregnancy Calculator (Coming Soon)',
+        // link: paths.calculate.fitness.pregnancy
+        link: paths.comingSoon
+      },
+      {
         title: 'Pace Calculator',
         link: paths.comingSoon
       },
@@ -50,15 +59,15 @@ const CARDS = [
         link: paths.calculate.math.randomNumber
       },
       {
-        title: 'Ratio Calculator',
+        title: 'Ratio Calculator (Coming Soon)',
         link: paths.comingSoon
       },
       {
-        title: 'Log Calculator',
+        title: 'Log Calculator (Coming Soon)',
         link: paths.comingSoon
       },
       {
-        title: 'Matrix Calculator',
+        title: 'Matrix Calculator (Coming Soon)',
         link: paths.comingSoon
       },
       {
