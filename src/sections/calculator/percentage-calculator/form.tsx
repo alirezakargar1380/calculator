@@ -11,7 +11,8 @@ import PercentageDifferenceForm from './percentage-difference';
 
 // ----------------------------------------------------------------------
 
-const md = 9;
+const md = 10;
+const md2 = 2;
 
 export default function PercentageCalculatorForm() {
 
@@ -21,19 +22,19 @@ export default function PercentageCalculatorForm() {
         <PercentageOfNumberForm />
       </Grid>
 
-      <Grid md={3} />
+      <Grid md={md2} />
 
       <Grid xs={12} md={md}>
         <WhatIsPercentageForm />
       </Grid>
 
-      <Grid md={3} />
+      <Grid md={md2} />
 
       <Grid xs={12} md={md}>
         <PercentageDifferenceForm />
       </Grid>
 
-      <Grid md={3} />
+      <Grid md={md2} />
     </>
   );
 

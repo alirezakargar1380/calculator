@@ -24,6 +24,8 @@ import FormProvider, {
 
 import { IFormBMI } from 'src/types/bmi';
 import { formant } from 'src/utils/format-number';
+import WhatIsPercentageForm1 from './what-is-percentage-form-1';
+import WhatIsPercentageForm2 from './what-is-percentage-form-2';
 
 // ----------------------------------------------------------------------
 
@@ -85,79 +87,16 @@ export default function WhatIsPercentageForm({ currentData }: Props) {
     });
 
     return (
-        <FormProvider methods={methods} onSubmit={onSubmit}>
-            <Card>
-                <CardHeader title="What Is Percentage of Number" />
 
-                <Box sx={{ p: 3 }}>
-                    <Box sx={{ alignItems: 'center', display: 'flex' }}>
+        <Card>
+            <CardHeader title="What Is Percentage of Number" />
 
-                        <Box sx={{ mb: 3 }}>what is</Box>
+            <Stack sx={{ p: 3 }} spacing={6}>
+                <WhatIsPercentageForm1 />
+                <WhatIsPercentageForm2 />
 
-                        <RHFTextField
-                            name="percentage"
-                            variant='filled'
-                            label={'percentage'}
-                            placeholder="0"
-                            type="number"
-                            helperText={' '}
-                            sx={{ mx: 2, width: 160 }}
-                            InputProps={{
-                                endAdornment: (
-                                    <InputAdornment position="start" sx={{
-                                        // m: 0
-                                    }}>
-                                        <Box component="span" sx={{ color: 'text.disabled' }}>
-                                            %
-                                        </Box>
-                                    </InputAdornment>
-                                ),
-                            }}
-                            InputLabelProps={{ shrink: true }}
-                        />
+            </Stack>
 
-                        <Box sx={{ mb: 3 }}>of</Box>
-
-                        <RHFTextField
-                            name="number"
-                            variant='filled'
-                            label="number"
-                            placeholder="0"
-                            type="number"
-                            helperText={formant(values.number)}
-                            sx={{ width: 150, mx: 2 }}
-                            InputLabelProps={{ shrink: true }}
-                        />
-
-                        <Box sx={{ mb: 3 }}>=</Box>
-
-                        <RHFTextField
-                            name="result"
-                            variant='filled'
-                            label="result"
-                            placeholder="0"
-                            type="number"
-                            disabled
-                            helperText={formant(values.result || 0)}
-                            sx={{ width: 150, mx: 2 }}
-                            //   InputProps={{
-                            //     endAdornment: (
-                            //       <InputAdornment position="start">
-                            //         <Box component="span" sx={{ color: 'text.disabled' }}>
-                            //           %
-                            //         </Box>
-                            //       </InputAdornment>
-                            //     ),
-                            //   }}
-                            InputLabelProps={{ shrink: true }}
-                        />
-                    </Box>
-                    <LoadingButton type="submit" variant="contained" size="medium" sx={{ width: 'fit-content', mt: 3 }} loading={isSubmitting}>
-                        Calculate
-                    </LoadingButton>
-                </Box>
-
-            </Card>
-        </FormProvider>
+        </Card>
     );
 }
