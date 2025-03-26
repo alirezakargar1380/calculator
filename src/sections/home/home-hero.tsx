@@ -189,7 +189,7 @@ export default function HomeHero() {
             textAlign: 'center',
           }}
         >
-          Dont Look for Fourmula!
+          Don't Look for Formula!
         </Typography>
       </m.div>
 
@@ -203,13 +203,13 @@ export default function HomeHero() {
             repeat: Infinity,
           }}
         >
-          Calculator
+          Mega Calculator
         </StyledTextGradient>
       </m.div>
 
       <m.div variants={varFade().in}>
         <Typography variant="body2" sx={{ textAlign: 'center' }}>
-          we have calculate for all your needs. in fitness, finacial, for fun :) and every thing else.
+          we have calculators for all your needs. in fitness, financial, fun :) and everything else.
         </Typography>
       </m.div>
 
