@@ -62,7 +62,8 @@ export const paths = {
       randomNumber: '/math/random-number/',
     },
     financial: {
-      loan: '/financial/loan-calculator'
+      loan: '/financial/loan-calculator',
+      saving: '/financial/saving-calculator',
     }
   },
   // AUTH

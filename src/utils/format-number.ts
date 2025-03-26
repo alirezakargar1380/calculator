@@ -15,7 +15,7 @@ export function formant(number: InputValue) {
 }
 
 export function fCurrency(number: InputValue) {
-  const format = number ? numeral(number).format('$0,0') : '';
+  const format = number ? numeral(number).format('$0,0.00') : '';
 
   return result(format);
 }

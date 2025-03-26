@@ -86,6 +86,10 @@ const CARDS = [
         link: paths.calculate.financial.loan
       },
       {
+        title: 'Saving Calculator',
+        link: paths.calculate.financial.saving
+      },
+      {
         title: 'Margin Calculator (Coming Soon)',
         link: paths.comingSoon
       },
@@ -93,10 +97,7 @@ const CARDS = [
         title: 'Budget Calculator (Coming Soon)',
         link: paths.comingSoon
       },
-      {
-        title: 'Saving Calculator (Coming Soon)',
-        link: paths.comingSoon
-      },
+      
       {
         title: 'Investment Calculator (Coming Soon)',
         link: paths.comingSoon

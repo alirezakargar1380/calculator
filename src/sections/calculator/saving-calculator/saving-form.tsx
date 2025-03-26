@@ -22,6 +22,7 @@ import FormProvider, {
 } from 'src/components/hook-form';
 import Scrollbar from 'src/components/scrollbar';
 import { DatePicker } from '@mui/x-date-pickers';
+import { fCurrency } from 'src/utils/format-number';
 
 // ----------------------------------------------------------------------
 
@@ -37,7 +38,10 @@ interface PeriodResult {
 }
 
 export default function SavingForm({ currentData }: Props) {
-  const [results, setResults] = useState<PeriodResult[]>([]);
+  const [results, setResults] = useState<any>({
+    result: [],
+    totalInterest: 0,
+  });
   const [showResults, setShowResults] = useState(false);
 
   const mdUp = useResponsive('up', 'md');
@@ -152,7 +156,7 @@ export default function SavingForm({ currentData }: Props) {
       let interest = 0;
       let balance = 0;
 
-      switch(compound) {
+      switch (compound) {
         case 'daily':
           interest = dailyInterest;
           balance = dailyBalance;
@@ -196,7 +200,7 @@ export default function SavingForm({ currentData }: Props) {
       principal += monthly_contribution;
     }
 
-    switch(compound) {
+    switch (compound) {
       case 'daily':
         totalInterest = +totalInterestDaily.toFixed(2);
         break;
@@ -222,7 +226,7 @@ export default function SavingForm({ currentData }: Props) {
     try {
       const calculatedResults = calculateSaving(data);
       console.log(calculatedResults)
-      // setResults(calculatedResults);
+      setResults(calculatedResults);
       // setShowResults(true);
       enqueueSnackbar('Saving calculation completed!');
     } catch (error) {
@@ -321,49 +325,35 @@ export default function SavingForm({ currentData }: Props) {
   );
 
   const renderResults = (
-    <Grid xs={12}>
+    <Grid xs={12} md={7}>
       <Card>
-        <CardHeader title="Your Period Calendar" />
+        <CardHeader title="Result" />
         <Box p={3}>
-          <Grid container spacing={3}>
-            <Grid xs={12} md={6}>
-              <Typography variant="h6" gutterBottom>
-                Period Dates
-              </Typography>
-              <TableContainer>
-                <Scrollbar>
-                  <Table>
-                    <TableBody>
-                      {results.map((result, index) => (
-                        <TableRow key={`period-${index}`}>
-                          <TableCell>{formatDateRange(result.periodStart, result.periodEnd)}</TableCell>
-                        </TableRow>
-                      ))}
-                    </TableBody>
-                  </Table>
-                </Scrollbar>
-              </TableContainer>
-            </Grid>
-
-            <Grid xs={12} md={6}>
-              <Typography variant="h6" gutterBottom>
-                Most Probable Ovulation Days
-              </Typography>
-              <TableContainer>
-                <Scrollbar>
-                  <Table>
-                    <TableBody>
-                      {results.map((result, index) => (
-                        <TableRow key={`ovulation-${index}`}>
-                          <TableCell>{formatDateRange(result.ovulationStart, result.ovulationEnd)}</TableCell>
-                        </TableRow>
-                      ))}
-                    </TableBody>
-                  </Table>
-                </Scrollbar>
-              </TableContainer>
-            </Grid>
-          </Grid>
+          <Box mb={2}>total Interest earned: ${results.totalInterest}</Box>
+          <TableContainer sx={{ overflow: 'unset' }}>
+            <Scrollbar>
+              <Table>
+                <TableHead>
+                  <TableRow>
+                    <TableCell>#</TableCell>
+                    <TableCell>Deposit</TableCell>
+                    <TableCell>Interest</TableCell>
+                    <TableCell>Balance</TableCell>
+                  </TableRow>
+                </TableHead>
+                <TableBody>
+                  {results.result.map((item: any, index: number) => (
+                    <TableRow>
+                      <TableCell>{item.month}</TableCell>
+                      <TableCell>{fCurrency(item.deposit)}</TableCell>
+                      <TableCell>{fCurrency(item.interest)}</TableCell>
+                      <TableCell>{fCurrency(item.balance)}</TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+            </Scrollbar>
+          </TableContainer>
         </Box>
       </Card>
     </Grid>
@@ -373,7 +363,7 @@ export default function SavingForm({ currentData }: Props) {
     <FormProvider methods={methods} onSubmit={onSubmit}>
       <Grid container spacing={3}>
         {renderForm}
-        {showResults && renderResults}
+        {renderResults}
       </Grid>
     </FormProvider>
   );

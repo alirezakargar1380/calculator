@@ -60,7 +60,7 @@ export default function LoanCalculatorForm({ currentData }: Props) {
 
   const defaultValues = useMemo(
     () => ({
-      amount: 1000000000,
+      amount: 10000000,
       installments: 12,
       rate: 4
     }),
@@ -187,7 +187,7 @@ export default function LoanCalculatorForm({ currentData }: Props) {
               label="loan amount"
               placeholder="0"
               type="number"
-              helperText={formant(values.amount)}
+              helperText={'$'+formant(values.amount)}
               InputProps={{
                 endAdornment: (
                   <InputAdornment position="start">
