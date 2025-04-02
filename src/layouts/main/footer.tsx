@@ -74,6 +74,7 @@ export default function Footer() {
     <Box
       component="footer"
       sx={{
+        mt: 10,
         position: 'relative',
         bgcolor: 'background.default',
       }}

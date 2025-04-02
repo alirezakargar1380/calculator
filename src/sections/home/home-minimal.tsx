@@ -20,7 +20,7 @@ const CARDS = [
   {
     icon: ' /assets/icons/home/health-logo-fitness.jpg',
     title: 'Fitness & Health Calculators',
-    description: 'Consistent design makes it easy to brand your own.',
+    description: 'improve your health and fitness',
     items: [
       {
         title: 'BMI Calculator',
@@ -79,7 +79,7 @@ const CARDS = [
   {
     icon: ' /assets/icons/home/40450-1067x800.jpg',
     title: 'Financial Calculators',
-    description: 'Consistent design makes it easy to brand your own.',
+    description: 'the useful financial formoula are here to use!',
     items: [
       {
         title: 'Loan Calculator',
