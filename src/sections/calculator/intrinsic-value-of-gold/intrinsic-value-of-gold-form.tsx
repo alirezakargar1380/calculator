@@ -8,7 +8,6 @@ import Card from '@mui/material/Card';
 import Stack from '@mui/material/Stack';
 import Grid from '@mui/material/Unstable_Grid2';
 import CardHeader from '@mui/material/CardHeader';
-import Typography from '@mui/material/Typography';
 import LoadingButton from '@mui/lab/LoadingButton';
 import InputAdornment from '@mui/material/InputAdornment';
 
@@ -16,21 +15,15 @@ import { useResponsive } from 'src/hooks/use-responsive';
 
 import {
   _tags,
-  PRODUCT_GENDER_OPTIONS,
 } from 'src/_mock';
 
 import { useSnackbar } from 'src/components/snackbar';
 import FormProvider, {
   RHFTextField,
-  RHFMultiCheckbox,
 } from 'src/components/hook-form';
 
-import ChartSemi from '../../_examples/extra/chart-view/chart-semi';
 import { IFormBMI } from 'src/types/bmi';
-import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from '@mui/material';
-import Scrollbar from 'src/components/scrollbar';
-import { fCurrency, formant } from 'src/utils/format-number';
-import IncrementerButton from '../common/incrementer-button';
+import { formant } from 'src/utils/format-number';
 
 // ----------------------------------------------------------------------
 
@@ -38,7 +31,7 @@ type Props = {
   currentData?: IFormBMI;
 };
 
-export default function GoldPriceForecastBasedOnDollarForm({ currentData }: Props) {
+export default function IntrinsicValueOfGoldForm({ currentData }: Props) {
   const [result, setResult] = useState<any>(0);
 
   const mdUp = useResponsive('up', 'md');
@@ -48,14 +41,12 @@ export default function GoldPriceForecastBasedOnDollarForm({ currentData }: Prop
   const NewProductSchema = Yup.object().shape({
     dollar: Yup.number().required('dollar is required'),
     ounce: Yup.number().required('ounce is required'),
-    bubble: Yup.number().required('bubble is required'),
   });
 
   const defaultValues = useMemo(
     () => ({
       dollar: 1250000,
       ounce: 3052,
-      bubble: 1,
     }),
     [currentData]
   );
@@ -83,11 +74,7 @@ export default function GoldPriceForecastBasedOnDollarForm({ currentData }: Prop
 
   const onSubmit = handleSubmit(async (data) => {
     try {
-      let rial = ((data.dollar * data.ounce) / 31.1) * (18 / 24);
-
-      // +5%
-      if (data.bubble > 0)
-        rial += rial * (data.bubble / 100);
+      let rial = ((data.dollar * data.ounce) / 41.45);
 
       setResult(rial);
 
@@ -108,10 +95,10 @@ export default function GoldPriceForecastBasedOnDollarForm({ currentData }: Prop
 
       <Grid xs={12} md={6}>
         <Card>
-          <CardHeader title="Gold Price Forecast Based On Dollar" />
+          <CardHeader title="Intrinsic Gold Value" />
 
           <Box p={3}>
-            Predict the price of 18-karat gold per gram based on the dollar price.
+            This calculator calculates the intrinsic value of gold. Intrinsic value means the value that gold has inherently and independently of external factors, such as market price.
             <br />
             <br />
             <Stack spacing={3}>
@@ -134,22 +121,6 @@ export default function GoldPriceForecastBasedOnDollarForm({ currentData }: Prop
                   }}
                 />
               </Box>
-              <Box>
-                <RHFTextField
-                  label='Gold Bubble (%)'
-                  type='number'
-                  name='bubble'
-                  InputProps={{
-                    startAdornment: (
-                      <InputAdornment position="start">
-                        <Box component="span" sx={{ color: 'text.disabled' }}>
-                          %
-                        </Box>
-                      </InputAdornment>
-                    ),
-                  }}
-                />
-              </Box>
             </Stack>
             <LoadingButton type="submit" variant="contained" size="medium" sx={{ width: 'fit-content', mt: 3 }} loading={isSubmitting}>
               Calculate
@@ -163,7 +134,7 @@ export default function GoldPriceForecastBasedOnDollarForm({ currentData }: Prop
         <Grid xs={12} md={6}>
           <Card>
             <CardHeader title="Result" sx={{ bgcolor: 'greenyellow', pb: 3 }} />
-            <Box p={3}>{'The price of each gram of 18-karat gold will be: ' + formant(result)}</Box>
+            <Box p={3}>{'The Intrinsic Value Of Gold is: ' + formant(result)}</Box>
           </Card>
         </Grid>
       )}

@@ -94,6 +94,10 @@ const CARDS = [
         link: paths.calculate.financial.goldPriceForecastBasedOnDollar
       },
       {
+        title: 'Intrinsic Gold Value',
+        link: paths.calculate.financial.intrinsicValueOfGold
+      },
+      {
         title: 'Margin Calculator (Coming Soon)',
         link: paths.comingSoon
       },
