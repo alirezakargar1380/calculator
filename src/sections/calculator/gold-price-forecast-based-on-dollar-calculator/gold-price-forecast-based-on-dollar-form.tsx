@@ -53,9 +53,9 @@ export default function GoldPriceForecastBasedOnDollarForm({ currentData }: Prop
 
   const defaultValues = useMemo(
     () => ({
-      dollar: 1250000,
+      dollar: 1050000,
       ounce: 3052,
-      bubble: 1,
+      bubble: 0,
     }),
     [currentData]
   );
