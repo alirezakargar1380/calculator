@@ -64,6 +64,7 @@ export const paths = {
     financial: {
       loan: '/financial/loan-calculator',
       saving: '/financial/saving-calculator',
+      goldPriceForecastBasedOnDollar: '/financial/gold-price-forecast-based-on-dollar/',
     }
   },
   // AUTH

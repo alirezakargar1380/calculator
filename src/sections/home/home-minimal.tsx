@@ -90,6 +90,10 @@ const CARDS = [
         link: paths.calculate.financial.saving
       },
       {
+        title: 'Gold Price Forecast Based on Dollar',
+        link: paths.calculate.financial.goldPriceForecastBasedOnDollar
+      },
+      {
         title: 'Margin Calculator (Coming Soon)',
         link: paths.comingSoon
       },
