@@ -22,7 +22,7 @@ import FormProvider, {
 } from 'src/components/hook-form';
 import Scrollbar from 'src/components/scrollbar';
 import { DatePicker } from '@mui/x-date-pickers';
-import { fCurrency } from 'src/utils/format-number';
+import { fCurrency, formant } from 'src/utils/format-number';
 
 // ----------------------------------------------------------------------
 
@@ -254,6 +254,7 @@ export default function SavingForm({ currentData }: Props) {
               name="deposit"
               label="Initial deposit"
               type="number"
+              helperText={formant(values.deposit)}
               InputProps={{
                 startAdornment: <InputAdornment position="end">$</InputAdornment>,
               }}
@@ -263,6 +264,7 @@ export default function SavingForm({ currentData }: Props) {
               name="annual_contribution"
               label="Annual contribution"
               type="number"
+              helperText={formant(values.annual_contribution)}
               InputProps={{
                 startAdornment: <InputAdornment position="end">$</InputAdornment>,
               }}
@@ -281,6 +283,7 @@ export default function SavingForm({ currentData }: Props) {
               name="monthly_contribution"
               label="Monthly contribution"
               type="number"
+              helperText={formant(values.monthly_contribution)}
               InputProps={{
                 startAdornment: <InputAdornment position="end">$</InputAdornment>,
               }}
