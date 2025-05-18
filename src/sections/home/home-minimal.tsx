@@ -1,3 +1,5 @@
+'use client';
+
 import { m } from 'framer-motion';
 
 import Box from '@mui/material/Box';
@@ -13,111 +15,230 @@ import Iconify from 'src/components/iconify';
 import { paths } from 'src/routes/paths';
 import ChartRadarBar from '../_examples/extra/chart-view/chart-radar-bar';
 import ChartSemi from '../_examples/extra/chart-view/chart-semi';
+import { useTranslate } from 'src/locales';
+import { useEffect, useState } from 'react';
 
 // ----------------------------------------------------------------------
 
-const CARDS = [
-  {
-    icon: ' /assets/icons/home/health-logo-fitness.jpg',
-    title: 'Fitness & Health Calculators',
-    description: 'improve your health and fitness',
-    items: [
-      {
-        title: 'BMI Calculator',
-        link: paths.calculate.fitness.bmi
-      },
-      {
-        title: 'Healthy Weight Calculator',
-        link: paths.calculate.fitness.healthyWeightCalculator
-      },
-      {
-        title: 'Period Calculator',
-        link: paths.calculate.fitness.period
-      },
-      {
-        title: 'Pregnancy Calculator (Coming Soon)',
-        // link: paths.calculate.fitness.pregnancy
-        link: paths.comingSoon
-      },
-      {
-        title: 'Pace Calculator (Coming Soon)',
-        link: paths.comingSoon
-      },
-    ]
-  },
-  {
-    icon: ' /assets/icons/home/math-illustration.jpg',
-    title: 'Math Calculators',
-    description: 'the useful mathamatics formoula are here to use!',
-    items: [
-      {
-        title: 'Percentage Calculator',
-        link: paths.calculate.math.percentageCalculator
-      },
-      {
-        title: 'Random Number Generator',
-        link: paths.calculate.math.randomNumber
-      },
-      {
-        title: 'Ratio Calculator (Coming Soon)',
-        link: paths.comingSoon
-      },
-      {
-        title: 'Log Calculator (Coming Soon)',
-        link: paths.comingSoon
-      },
-      {
-        title: 'Matrix Calculator (Coming Soon)',
-        link: paths.comingSoon
-      },
-      {
-        title: 'Big Number Generator (Coming Soon)',
-        link: paths.comingSoon
-      },
-    ]
-  },
-  {
-    icon: ' /assets/icons/home/40450-1067x800.jpg',
-    title: 'Financial Calculators',
-    description: 'the useful financial formoula are here to use!',
-    items: [
-      {
-        title: 'Loan Calculator',
-        link: paths.calculate.financial.loan
-      },
-      {
-        title: 'Saving Calculator',
-        link: paths.calculate.financial.saving
-      },
-      {
-        title: 'Gold Price Forecast Based on Dollar',
-        link: paths.calculate.financial.goldPriceForecastBasedOnDollar
-      },
-      {
-        title: 'Intrinsic Gold Value',
-        link: paths.calculate.financial.intrinsicValueOfGold
-      },
-      {
-        title: 'Margin Calculator (Coming Soon)',
-        link: paths.comingSoon
-      },
-      {
-        title: 'Budget Calculator (Coming Soon)',
-        link: paths.comingSoon
-      },
-      
-      {
-        title: 'Investment Calculator (Coming Soon)',
-        link: paths.comingSoon
-      },
-    ]
-  }
-];
+// const CARDS = [
+//   {
+//     icon: ' /assets/icons/home/health-logo-fitness.jpg',
+//     title: 'Fitness & Health Calculators',
+//     description: 'improve your health and fitness',
+//     items: [
+//       {
+//         title: 'BMI Calculator',
+//         link: paths.calculate.fitness.bmi
+//       },
+//       {
+//         title: 'Healthy Weight Calculator',
+//         link: paths.calculate.fitness.healthyWeightCalculator
+//       },
+//       {
+//         title: 'Period Calculator',
+//         link: paths.calculate.fitness.period
+//       },
+//       {
+//         title: 'Pregnancy Calculator (Coming Soon)',
+//         // link: paths.calculate.fitness.pregnancy
+//         link: paths.comingSoon
+//       },
+//       {
+//         title: 'Pace Calculator (Coming Soon)',
+//         link: paths.comingSoon
+//       },
+//     ]
+//   },
+//   {
+//     icon: ' /assets/icons/home/math-illustration.jpg',
+//     title: 'Math Calculators',
+//     description: 'the useful mathamatics formoula are here to use!',
+//     items: [
+//       {
+//         title: 'Percentage Calculator',
+//         link: paths.calculate.math.percentageCalculator
+//       },
+//       {
+//         title: 'Random Number Generator',
+//         link: paths.calculate.math.randomNumber
+//       },
+//       {
+//         title: 'Ratio Calculator (Coming Soon)',
+//         link: paths.comingSoon
+//       },
+//       {
+//         title: 'Log Calculator (Coming Soon)',
+//         link: paths.comingSoon
+//       },
+//       {
+//         title: 'Matrix Calculator (Coming Soon)',
+//         link: paths.comingSoon
+//       },
+//       {
+//         title: 'Big Number Generator (Coming Soon)',
+//         link: paths.comingSoon
+//       },
+//     ]
+//   },
+//   {
+//     icon: ' /assets/icons/home/40450-1067x800.jpg',
+//     title: 'Financial Calculators',
+//     description: 'the useful financial formoula are here to use!',
+//     items: [
+//       {
+//         title: 'Loan Calculator',
+//         link: paths.calculate.financial.loan
+//       },
+//       {
+//         title: 'Saving Calculator',
+//         link: paths.calculate.financial.saving
+//       },
+//       {
+//         title: 'Gold Price Forecast Based on Dollar',
+//         link: paths.calculate.financial.goldPriceForecastBasedOnDollar
+//       },
+//       {
+//         title: 'Intrinsic Gold Value',
+//         link: paths.calculate.financial.intrinsicValueOfGold
+//       },
+//       {
+//         title: 'Margin Calculator (Coming Soon)',
+//         link: paths.comingSoon
+//       },
+//       {
+//         title: 'Budget Calculator (Coming Soon)',
+//         link: paths.comingSoon
+//       },
+
+//       {
+//         title: 'Investment Calculator (Coming Soon)',
+//         link: paths.comingSoon
+//       },
+//     ]
+//   }
+// ];
 
 // ----------------------------------------------------------------------
 
 export default function HomeMinimal() {
-  return (
+  const [mounted, setMounted] = useState(false);
+  const [cards, setCards] = useState<any[]>([]);
+
+  const { t, ready } = useTranslate(); // Get the ready state from useTranslate
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  // Define CARDS inside useEffect to ensure translations are ready
+  useEffect(() => {
+    if (mounted && ready) {
+      const CARDS = [
+        {
+          icon: '/assets/icons/home/health-logo-fitness.jpg',
+          title: t('demo.title'),
+          description: 'improve your health and fitness',
+          items: [
+            {
+              title: 'BMI Calculator',
+              link: paths.calculate.fitness.bmi
+            },
+            {
+              title: 'Healthy Weight Calculator',
+              link: paths.calculate.fitness.healthyWeightCalculator
+            },
+            {
+              title: 'Period Calculator',
+              link: paths.calculate.fitness.period
+            },
+            {
+              title: 'Pregnancy Calculator (Coming Soon)',
+              link: paths.comingSoon
+            },
+            {
+              title: 'Pace Calculator (Coming Soon)',
+              link: paths.comingSoon
+            },
+          ]
+        },
+        {
+          icon: '/assets/icons/home/math-illustration.jpg',
+          title: 'Math Calculators',
+          description: 'the useful mathamatics formoula are here to use!',
+          items: [
+            {
+              title: 'Percentage Calculator',
+              link: paths.calculate.math.percentageCalculator
+            },
+            {
+              title: 'Random Number Generator',
+              link: paths.calculate.math.randomNumber
+            },
+            {
+              title: 'Ratio Calculator (Coming Soon)',
+              link: paths.comingSoon
+            },
+            {
+              title: 'Log Calculator (Coming Soon)',
+              link: paths.comingSoon
+            },
+            {
+              title: 'Matrix Calculator (Coming Soon)',
+              link: paths.comingSoon
+            },
+            {
+              title: 'Big Number Generator (Coming Soon)',
+              link: paths.comingSoon
+            },
+          ]
+        },
+        {
+          icon: '/assets/icons/home/40450-1067x800.jpg',
+          title: 'Financial Calculators',
+          description: 'the useful financial formoula are here to use!',
+          items: [
+            {
+              title: 'Loan Calculator',
+              link: paths.calculate.financial.loan
+            },
+            {
+              title: 'Saving Calculator',
+              link: paths.calculate.financial.saving
+            },
+            {
+              title: 'Gold Price Forecast Based on Dollar',
+              link: paths.calculate.financial.goldPriceForecastBasedOnDollar
+            },
+            {
+              title: 'Intrinsic Gold Value',
+              link: paths.calculate.financial.intrinsicValueOfGold
+            },
+            {
+              title: 'Margin Calculator (Coming Soon)',
+              link: paths.comingSoon
+            },
+            {
+              title: 'Budget Calculator (Coming Soon)',
+              link: paths.comingSoon
+            },
+            {
+              title: 'Investment Calculator (Coming Soon)',
+              link: paths.comingSoon
+            },
+          ]
+        }
+      ];
+      
+      setCards(CARDS);
+    }
+  }, [mounted, ready, t]); // Add ready and t to dependencies
+
+  // Remove this console.log or make it conditional
+  if (mounted) {
+    console.log(cards);
+  }
+
+  return (cards.length > 0) && (
     <Container
       component={MotionViewport}
       sx={{
@@ -153,7 +274,7 @@ export default function HomeMinimal() {
           md: 'repeat(3, 1fr)',
         }}
       >
-        {CARDS.map((card, index) => (
+        {cards.map((card: any, index) => (
           <m.div variants={varFade().inUp} key={card.title}>
             <Card
               sx={{
@@ -194,7 +315,7 @@ export default function HomeMinimal() {
               </Typography>
 
               <Stack spacing={2} mt={2}>
-                {card?.items?.map((item) => (
+                {card?.items?.map((item: any) => (
                   <Button
                     key={item.title}
                     color="inherit"
