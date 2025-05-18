@@ -81,7 +81,7 @@ export const allLangs = [
   // },
 ];
 
-export const defaultLang = allLangs[1]; // English
+export const defaultLang = allLangs[1]; // Persion
 
 // GET MORE COUNTRY FLAGS
 // https://icon-sets.iconify.design/flagpack/

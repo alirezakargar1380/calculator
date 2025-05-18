@@ -1,6 +1,6 @@
 'use client';
 
-import { useCallback } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { localStorageGetItem } from 'src/utils/storage-available';
@@ -12,10 +12,17 @@ import { allLangs, defaultLang } from './config-lang';
 // ----------------------------------------------------------------------
 
 export function useLocales() {
-  const langStorage = localStorageGetItem('i18nextLng');
-
-  const currentLang = allLangs.find((lang) => lang.value === langStorage) || defaultLang;
-
+  const [currentLang, setCurrentLang] = useState(defaultLang);
+  
+  // Only run this effect on the client side
+  useEffect(() => {
+    const langStorage = localStorageGetItem('i18nextLng', '');
+    const storedLang = allLangs.find((lang) => lang.value === langStorage);
+    if (storedLang) {
+      setCurrentLang(storedLang);
+    }
+  }, []);
+  
   return {
     allLangs,
     currentLang,
