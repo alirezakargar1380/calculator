@@ -15,7 +15,7 @@ import Iconify from 'src/components/iconify';
 import { paths } from 'src/routes/paths';
 import ChartRadarBar from '../_examples/extra/chart-view/chart-radar-bar';
 import ChartSemi from '../_examples/extra/chart-view/chart-semi';
-import { useTranslate } from 'src/locales';
+import { useLocales, useTranslate } from 'src/locales';
 import { useEffect, useState } from 'react';
 
 // ----------------------------------------------------------------------
@@ -124,7 +124,8 @@ export default function HomeMinimal() {
   const [mounted, setMounted] = useState(false);
   const [cards, setCards] = useState<any[]>([]);
 
-  const { t, ready } = useTranslate(); // Get the ready state from useTranslate
+  const { t, ready } = useTranslate();
+  const { currentLang } = useLocales();
 
   useEffect(() => {
     setMounted(true);
@@ -136,99 +137,99 @@ export default function HomeMinimal() {
       const CARDS = [
         {
           icon: '/assets/icons/home/health-logo-fitness.jpg',
-          title: t('demo.title'),
-          description: 'improve your health and fitness',
+          title: t('calculators.health.title'),
+          description: t('calculators.health.desccription'),
           items: [
             {
-              title: 'BMI Calculator',
+              title: t('calculators.health.bmi'),
               link: paths.calculate.fitness.bmi
             },
             {
-              title: 'Healthy Weight Calculator',
+              title: t('calculators.health.healthy_weight'),
               link: paths.calculate.fitness.healthyWeightCalculator
             },
             {
-              title: 'Period Calculator',
+              title: t('calculators.health.period'),
               link: paths.calculate.fitness.period
             },
-            {
-              title: 'Pregnancy Calculator (Coming Soon)',
-              link: paths.comingSoon
-            },
-            {
-              title: 'Pace Calculator (Coming Soon)',
-              link: paths.comingSoon
-            },
+            // {
+            //   title: 'Pregnancy Calculator (Coming Soon)',
+            //   link: paths.comingSoon
+            // },
+            // {
+            //   title: 'Pace Calculator (Coming Soon)',
+            //   link: paths.comingSoon
+            // },
           ]
         },
         {
           icon: '/assets/icons/home/math-illustration.jpg',
-          title: 'Math Calculators',
-          description: 'the useful mathamatics formoula are here to use!',
+          title: t('calculators.math.title'),
+          description: t('calculators.math.desccription'),
           items: [
             {
-              title: 'Percentage Calculator',
+              title: t('calculators.math.percentage'),
               link: paths.calculate.math.percentageCalculator
             },
             {
-              title: 'Random Number Generator',
+              title: t('calculators.math.random_number'),
               link: paths.calculate.math.randomNumber
             },
-            {
-              title: 'Ratio Calculator (Coming Soon)',
-              link: paths.comingSoon
-            },
-            {
-              title: 'Log Calculator (Coming Soon)',
-              link: paths.comingSoon
-            },
-            {
-              title: 'Matrix Calculator (Coming Soon)',
-              link: paths.comingSoon
-            },
-            {
-              title: 'Big Number Generator (Coming Soon)',
-              link: paths.comingSoon
-            },
+            // {
+            //   title: 'Ratio Calculator (Coming Soon)',
+            //   link: paths.comingSoon
+            // },
+            // {
+            //   title: 'Log Calculator (Coming Soon)',
+            //   link: paths.comingSoon
+            // },
+            // {
+            //   title: 'Matrix Calculator (Coming Soon)',
+            //   link: paths.comingSoon
+            // },
+            // {
+            //   title: 'Big Number Generator (Coming Soon)',
+            //   link: paths.comingSoon
+            // },
           ]
         },
         {
           icon: '/assets/icons/home/40450-1067x800.jpg',
-          title: 'Financial Calculators',
-          description: 'the useful financial formoula are here to use!',
+          title: t('calculators.finance.title'),
+          description: t('calculators.finance.desccription'),
           items: [
             {
-              title: 'Loan Calculator',
+              title: t('calculators.finance.loan'),
               link: paths.calculate.financial.loan
             },
             {
-              title: 'Saving Calculator',
+              title: t('calculators.finance.saving'),
               link: paths.calculate.financial.saving
             },
             {
-              title: 'Gold Price Forecast Based on Dollar',
+              title: t('calculators.finance.gold_price_based_on_dollar'),
               link: paths.calculate.financial.goldPriceForecastBasedOnDollar
             },
             {
-              title: 'Intrinsic Gold Value',
+              title: t('calculators.finance.intrinsic_gold_value'),
               link: paths.calculate.financial.intrinsicValueOfGold
             },
-            {
-              title: 'Margin Calculator (Coming Soon)',
-              link: paths.comingSoon
-            },
-            {
-              title: 'Budget Calculator (Coming Soon)',
-              link: paths.comingSoon
-            },
-            {
-              title: 'Investment Calculator (Coming Soon)',
-              link: paths.comingSoon
-            },
+            // {
+            //   title: 'Margin Calculator (Coming Soon)',
+            //   link: paths.comingSoon
+            // },
+            // {
+            //   title: 'Budget Calculator (Coming Soon)',
+            //   link: paths.comingSoon
+            // },
+            // {
+            //   title: 'Investment Calculator (Coming Soon)',
+            //   link: paths.comingSoon
+            // },
           ]
         }
       ];
-      
+
       setCards(CARDS);
     }
   }, [mounted, ready, t]); // Add ready and t to dependencies
@@ -254,13 +255,13 @@ export default function HomeMinimal() {
       >
         <m.div variants={varFade().inUp}>
           <Typography component="div" variant="overline" sx={{ color: 'text.disabled' }}>
-            Calculator
+            {t('calculators.description')}
           </Typography>
         </m.div>
 
         <m.div variants={varFade().inDown}>
           <Typography variant="h2">
-            here is our Calculators
+            {t('calculators.title')}
           </Typography>
         </m.div>
       </Stack>
@@ -280,6 +281,7 @@ export default function HomeMinimal() {
               sx={{
                 textAlign: 'left',
                 // boxShadow: { md: 'none' },
+                fontFamily: 'peyda-light',
                 bgcolor: 'background.default',
                 p: (theme) => theme.spacing(2, 2, 4, 2),
                 boxShadow: (theme) => ({
@@ -288,6 +290,10 @@ export default function HomeMinimal() {
                     : alpha(theme.palette.common.black, 0.4)
                     }`,
                 }),
+                ...(currentLang.value === 'fa' && {
+                  textAlign: 'right',
+                  direction: 'rtl',
+                })
                 // ...(index === 1 && {
                 //   boxShadow: (theme) => ({
                 //     md: `-40px 40px 80px ${
@@ -306,11 +312,11 @@ export default function HomeMinimal() {
                 sx={{ mx: 'auto', width: 1, height: 200, borderRadius: 1, objectFit: 'cover' }}
               />
 
-              <Typography variant="h5" sx={{ mt: 2, mb: 1, textAlign: 'left' }}>
+              <Typography variant="h5" sx={{ mt: 2, mb: 1 }}>
                 {card.title}
               </Typography>
 
-              <Typography sx={{ color: 'text.secondary', textAlign: 'left' }}>
+              <Typography sx={{ color: 'text.secondary' }}>
                 {card.description}
               </Typography>
 
@@ -321,11 +327,21 @@ export default function HomeMinimal() {
                     color="inherit"
                     size="small"
                     variant="text"
-                    startIcon={<Iconify icon="eva:external-link-fill" width={24} />}
+                    startIcon={
+                      <Iconify icon="eva:external-link-fill" width={24}
+                        sx={{
+                          ...(currentLang.value === 'fa' && {
+                            ml: 1
+                          }),
+                        }} />
+                    }
                     target="_blank"
                     rel="noopener"
                     href={item.link}
-                    sx={{ borderColor: 'text.primary', width: 'fit-content' }}
+                    sx={{ 
+                      borderColor: 'text.primary', 
+                      width: 'fit-content'
+                    }}
                   >
                     {item.title}
                   </Button>
