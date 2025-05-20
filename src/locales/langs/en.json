@@ -2,6 +2,8 @@
   "demo": {
     "title": "English"
   },
+  "title": "Mega Calculator",
+  "title_about": "Don't Look for Formula anymore!",
   "calculators": {
     "title": "here is our Calculators",
     "description": "Calculators",

@@ -1,3 +1,5 @@
+'use client';
+
 import { m, useScroll } from 'framer-motion';
 import { useRef, useState, useEffect, useCallback } from 'react';
 
@@ -21,6 +23,7 @@ import { bgBlur, bgGradient, textGradient } from 'src/theme/css';
 
 import Iconify from 'src/components/iconify';
 import { varFade, MotionContainer } from 'src/components/animate';
+import { useTranslate } from 'src/locales';
 
 // ----------------------------------------------------------------------
 
@@ -128,8 +131,11 @@ const StyledPolygon = styled('div')<StyledPolygonProps>(
 
 export default function HomeHero() {
   const mdUp = useResponsive('up', 'md');
+  const [mounted, setMounted] = useState(false);
 
   const theme = useTheme();
+
+  const { t, ready } = useTranslate();
 
   const heroRef = useRef<HTMLDivElement | null>(null);
 
@@ -138,6 +144,10 @@ export default function HomeHero() {
   const [percent, setPercent] = useState(0);
 
   const lightMode = theme.palette.mode === 'light';
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   const getScroll = useCallback(() => {
     let heroHeight = 0;
@@ -168,7 +178,7 @@ export default function HomeHero() {
 
   const hide = percent > 120;
 
-  const renderDescription = (
+  const renderDescription = (mounted) && (
     <Stack
       alignItems="center"
       justifyContent="center"
@@ -189,7 +199,7 @@ export default function HomeHero() {
             textAlign: 'center',
           }}
         >
-          Don't Look for Formula!
+          {t('title_about')}
         </Typography>
       </m.div>
 
@@ -203,7 +213,7 @@ export default function HomeHero() {
             repeat: Infinity,
           }}
         >
-          Mega Calculator
+          {t('title')}
         </StyledTextGradient>
       </m.div>
 
