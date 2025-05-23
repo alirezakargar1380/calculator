@@ -98,7 +98,7 @@ export default function BMIForm({ currentData }: Props) {
     watch,
     setValue,
     handleSubmit,
-    formState: { isSubmitting },
+    formState: { isSubmitting, isSubmitted },
   } = methods;
 
   const values = watch();
@@ -109,7 +109,7 @@ export default function BMIForm({ currentData }: Props) {
     }
   }, [currentData, defaultValues, reset]);
 
-  useEffect(() => { onSubmit() }, [])
+  // useEffect(() => { onSubmit() }, [])
 
   const onSubmit = handleSubmit(async (data) => {
     try {
@@ -182,7 +182,9 @@ export default function BMIForm({ currentData }: Props) {
       </Grid>
 
       <Grid md={6}>
-        <ChartSemi bmi={bmi} />
+        {isSubmitted && (
+          <ChartSemi bmi={bmi} />
+        )}
       </Grid>
     </>
   );
