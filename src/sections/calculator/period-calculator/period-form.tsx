@@ -23,6 +23,8 @@ import FormProvider, {
 import Scrollbar from 'src/components/scrollbar';
 import { DatePicker, LocalizationProvider } from '@mui/x-date-pickers';
 import { AdapterDateFnsJalali } from '@mui/x-date-pickers/AdapterDateFnsJalali';
+import { useLocales } from 'src/locales';
+import { faIR } from 'date-fns-jalali/locale';
 
 // ----------------------------------------------------------------------
 
@@ -40,6 +42,8 @@ interface PeriodResult {
 export default function PeriodForm({ currentData }: Props) {
   const [results, setResults] = useState<PeriodResult[]>([]);
   const [showResults, setShowResults] = useState(false);
+
+  const { currentLang } = useLocales();
 
   const mdUp = useResponsive('up', 'md');
   const { enqueueSnackbar } = useSnackbar();
@@ -89,33 +93,33 @@ export default function PeriodForm({ currentData }: Props) {
   const calculatePeriods = (data: any) => {
     const { lastPeriodDate, periodLength, cycleLength } = data;
     const numberOfCycles = 6; // Calculate next 6 periods
-    
+
     const results: PeriodResult[] = [];
-    
+
     let currentPeriodStart = new Date(lastPeriodDate);
-    
+
     for (let i = 0; i < numberOfCycles; i++) {
       // Calculate period end date
       const periodEnd = addDays(currentPeriodStart, periodLength - 1);
-      
+
       // Calculate ovulation window (typically 14 days before next period, with a 5-day window)
       const ovulationMid = addDays(currentPeriodStart, cycleLength - 14);
       const ovulationStart = addDays(ovulationMid, -2);
       const ovulationEnd = addDays(ovulationMid, 2);
 
       console.log('Period Start:', ovulationMid);
-      
+
       results.push({
         periodStart: new Date(currentPeriodStart),
         periodEnd,
         ovulationStart,
         ovulationEnd,
       });
-      
+
       // Move to next cycle
       currentPeriodStart = addDays(currentPeriodStart, cycleLength);
     }
-    
+
     return results;
   };
 
@@ -138,19 +142,23 @@ export default function PeriodForm({ currentData }: Props) {
 
   const renderForm = (
     <Grid xs={12}>
-      <Card>
-        <CardHeader title="Period Calculator" />
+      <Card sx={{
+        ...(currentLang.value === "fa" && {
+          textAlign: 'right',
+        })
+      }}>
+        <CardHeader title={currentLang.value === "fa" ? "محاسبه دوره قاعدگی" : "Period Calculator"} />
         <Box p={3}>
           <Typography variant="body1" paragraph>
-            Calculate your future periods and most probable ovulation days based on your cycle information.
+            {currentLang.value === "fa" ? 'دوره‌های قاعدگی آینده و محتمل‌ترین روزهای تخمک‌گذاری خود را بر اساس اطلاعات چرخه قاعدگی‌تان محاسبه کنید.' : 'Calculate your future periods and most probable ovulation days based on your cycle information.'}
           </Typography>
-          
+
           <Stack spacing={3}>
             <LocalizationProvider dateAdapter={AdapterDateFnsJalali}>
               <DatePicker
                 openTo="year"
                 views={['year', 'month', 'day']}
-                label="First Day of Your Last Period"
+                label={currentLang.value === "fa" ? "تاریخ اولین روزِ آخرین باری که پریود شدی" : "First Day of Your Last Period"}
                 value={values.lastPeriodDate}
                 onChange={(newValue) => {
                   if (newValue) setValue("lastPeriodDate", newValue);
@@ -160,32 +168,32 @@ export default function PeriodForm({ currentData }: Props) {
                 }}
               />
             </LocalizationProvider>
-            
+
             <RHFTextField
               name="periodLength"
-              label="How long did it last?"
+              label={currentLang.value === "fa" ? "آخرین بار چند روز طول کشید؟" : "How long did it last?"}
               type="number"
               InputProps={{
                 endAdornment: <InputAdornment position="end">days</InputAdornment>,
               }}
             />
-            
+
             <RHFTextField
               name="cycleLength"
-              label="Average Length of Cycles"
+              label={currentLang.value === "fa" ? "میانگین هر دوره ای که پریود میشی" : "Average Length of Cycles"}
               type="number"
               InputProps={{
                 endAdornment: <InputAdornment position="end">days</InputAdornment>,
               }}
             />
-            
-            <LoadingButton 
-              type="submit" 
-              variant="contained" 
-              size="large" 
+
+            <LoadingButton
+              type="submit"
+              variant="contained"
+              size="large"
               loading={isSubmitting}
             >
-              Calculate
+              {currentLang.value === "fa" ? "محاسبه" : "Calculate"}
             </LoadingButton>
           </Stack>
         </Box>
@@ -195,13 +203,18 @@ export default function PeriodForm({ currentData }: Props) {
 
   const renderResults = (
     <Grid xs={12}>
-      <Card>
-        <CardHeader title="Your Period Calendar" />
+      <Card sx={{
+        ...(currentLang.value === "fa" && {
+          textAlign: 'right',
+          direction: 'rtl',
+        })
+      }}>
+        <CardHeader title={currentLang.value === "fa" ? 'تقویم پریود شما' : "Your Period Calendar"} />
         <Box p={3}>
           <Grid container spacing={3}>
             <Grid xs={12} md={6}>
               <Typography variant="h6" gutterBottom>
-                Period Dates
+                {currentLang.value === "fa" ? "تاریخ های پریود" : "Period Dates"}
               </Typography>
               <TableContainer>
                 <Scrollbar>
@@ -209,7 +222,11 @@ export default function PeriodForm({ currentData }: Props) {
                     <TableBody>
                       {results.map((result, index) => (
                         <TableRow key={`period-${index}`}>
-                          <TableCell>{formatDateRange(result.periodStart, result.periodEnd)}</TableCell>
+                          <TableCell sx={{
+                            ...(currentLang.value === "fa" && {
+                              textAlign: 'right',
+                            })
+                          }}>{formatDateRange(result.periodStart, result.periodEnd)}</TableCell>
                         </TableRow>
                       ))}
                     </TableBody>
@@ -217,10 +234,10 @@ export default function PeriodForm({ currentData }: Props) {
                 </Scrollbar>
               </TableContainer>
             </Grid>
-            
+
             <Grid xs={12} md={6}>
               <Typography variant="h6" gutterBottom>
-                Most Probable Ovulation Days
+                {currentLang.value === "fa" ? "محتمل‌ترین روزهای تخمک‌گذاری" : "Most Probable Ovulation Days"}
               </Typography>
               <TableContainer>
                 <Scrollbar>
@@ -228,7 +245,11 @@ export default function PeriodForm({ currentData }: Props) {
                     <TableBody>
                       {results.map((result, index) => (
                         <TableRow key={`ovulation-${index}`}>
-                          <TableCell>{formatDateRange(result.ovulationStart, result.ovulationEnd)}</TableCell>
+                          <TableCell sx={{
+                            ...(currentLang.value === "fa" && {
+                              textAlign: 'right',
+                            })
+                          }}>{formatDateRange(result.ovulationStart, result.ovulationEnd)}</TableCell>
                         </TableRow>
                       ))}
                     </TableBody>
