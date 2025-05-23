@@ -84,7 +84,7 @@ export default function HomeView() {
 
         <HomeLookingFor />
 
-        <HomeAdvertisement />
+        {/* <HomeAdvertisement /> */}
       </Box>
     </MainLayout>
   );

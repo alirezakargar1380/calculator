@@ -219,7 +219,7 @@ export default function HomeHero() {
 
       <m.div variants={varFade().in}>
         <Typography variant="body2" sx={{ textAlign: 'center' }}>
-          we have calculators for all your needs. in fitness, financial, fun :) and everything else.
+          {t('description')}
         </Typography>
       </m.div>
 

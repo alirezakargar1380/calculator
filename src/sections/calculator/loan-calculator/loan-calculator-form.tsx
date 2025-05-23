@@ -16,20 +16,18 @@ import { useResponsive } from 'src/hooks/use-responsive';
 
 import {
   _tags,
-  PRODUCT_GENDER_OPTIONS,
 } from 'src/_mock';
 
 import { useSnackbar } from 'src/components/snackbar';
 import FormProvider, {
   RHFTextField,
-  RHFMultiCheckbox,
 } from 'src/components/hook-form';
 
-import ChartSemi from '../../_examples/extra/chart-view/chart-semi';
 import { IFormBMI } from 'src/types/bmi';
 import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from '@mui/material';
 import Scrollbar from 'src/components/scrollbar';
 import { fCurrency, formant } from 'src/utils/format-number';
+import { useLocales, useTranslate } from 'src/locales';
 
 // ----------------------------------------------------------------------
 
@@ -47,6 +45,16 @@ export default function LoanCalculatorForm({ currentData }: Props) {
     totalInterest: 21798850.346672058,
     totalPayment: 1021798850.346672,
   });
+
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+
+  const { t } = useTranslate();
+  const { currentLang } = useLocales();
 
   const mdUp = useResponsive('up', 'md');
 
@@ -173,21 +181,29 @@ export default function LoanCalculatorForm({ currentData }: Props) {
     }).format(date);
   }
 
-  const renderProperties = (
+  const renderProperties = (mounted) && (
     <>
 
       <Grid xs={12}>
-        <Card>
-          <CardHeader title="Loan Calculator" />
+        <Card sx={{
+          // ...(currentLang.value === 'fa' && {
+          //   direction: 'rtl!important',
+          // })
+        }}>
+          <CardHeader sx={{
+            ...(currentLang.value === 'fa' && {
+              textAlign: 'right',
+            })
+          }} title={t('page.finance.lona.title')} />
 
           <Stack spacing={3} sx={{ p: 3 }}>
 
             <RHFTextField
               name="amount"
-              label="loan amount"
+              label={t('page.finance.loan_amount')}
               placeholder="0"
               type="number"
-              helperText={'$'+formant(values.amount)}
+              helperText={'$' + formant(values.amount)}
               InputProps={{
                 endAdornment: (
                   <InputAdornment position="start">
@@ -202,7 +218,7 @@ export default function LoanCalculatorForm({ currentData }: Props) {
 
             <RHFTextField
               name="installments"
-              label="number of installments"
+              label={t('page.finance.no_installments')}
               placeholder="0"
               type="number"
               InputLabelProps={{ shrink: true }}
@@ -210,14 +226,14 @@ export default function LoanCalculatorForm({ currentData }: Props) {
 
             <RHFTextField
               name="rate"
-              label="interest rate"
+              label={t('page.interest_rate')}
               placeholder="0"
               type="number"
               InputProps={{
                 endAdornment: (
                   <InputAdornment position="start">
                     <Box component="span" sx={{ color: 'text.disabled' }}>
-                      Cm
+                      %
                     </Box>
                   </InputAdornment>
                 ),
@@ -226,7 +242,7 @@ export default function LoanCalculatorForm({ currentData }: Props) {
             />
 
             <LoadingButton type="submit" variant="contained" size="medium" sx={{ width: 'fit-content' }} loading={isSubmitting}>
-              Calculate
+              {t('cal_btn')}
             </LoadingButton>
 
           </Stack>
@@ -234,31 +250,35 @@ export default function LoanCalculatorForm({ currentData }: Props) {
       </Grid>
 
       <Grid xs={12}>
-        <Card>
-        <CardHeader title="Result" color='#1c9035' />
+        <Card sx={{
+          ...(currentLang.value === 'fa' && {
+            direction: 'rtl!important',
+          })
+        }}>
+          <CardHeader title={t('page.finance.lona.result.title')} color='#1c9035' />
           <Stack spacing={1} p={3}>
             <Box display={'flex'} gap={1}>
-              <Typography variant='h6'>Loan Amount:</Typography>
+              <Typography variant='h6'>{t('page.finance.loan_amount')}:</Typography>
               <Typography variant='h6' color={'teal'}>{fCurrency(result.loanAmount)}</Typography>
             </Box>
             <Box display={'flex'} gap={1}>
-              <Typography variant='h6'>Number of Installments:</Typography>
-              <Typography variant='h6' color={'teal'}>{result.numberOfInstallments} months</Typography>
+              <Typography variant='h6'>{t('page.finance.no_installments')}:</Typography>
+              <Typography variant='h6' color={'teal'}>{result.numberOfInstallments} {t('page.finance.installments_unit')}</Typography>
             </Box>
             <Box display={'flex'} gap={1}>
-              <Typography variant='h6'>Annual Interest Rate:</Typography>
+              <Typography variant='h6'>{t('page.finance.annual_interest_rate')}:</Typography>
               <Typography variant='h6' color={'teal'}>{result.annualInterestRate + '%'}</Typography>
             </Box>
             <Box display={'flex'} gap={1}>
-              <Typography variant='h6'>Monthly Payment:</Typography>
+              <Typography variant='h6'>{t('page.finance.lona.result.monthly_payment')}:</Typography>
               <Typography variant='h6' color={'teal'}>{fCurrency(result.monthlyPayment)}</Typography>
             </Box>
             <Box display={'flex'} gap={1}>
-              <Typography variant='h6'>Total Payment:</Typography>
+              <Typography variant='h6'>{t('page.finance.lona.result.total_payment')}:</Typography>
               <Typography variant='h6' color={'teal'}>{fCurrency(result.totalPayment)}</Typography>
             </Box>
             <Box display={'flex'} gap={1}>
-              <Typography variant='h6'>Total Interest:</Typography>
+              <Typography variant='h6'>{t('page.finance.lona.result.total_interest')}:</Typography>
               <Typography variant='h6' color={'teal'}>{fCurrency(result.totalInterest)}</Typography>
             </Box>
           </Stack>
