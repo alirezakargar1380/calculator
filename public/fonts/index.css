@@ -19,4 +19,56 @@
   src: local('CircularStd'), url('CircularStd-Bold.otf') format('opentype');
 }
 
- 
+@font-face {
+  font-family: 'peyda-medium';
+  /* font-weight: 700; */
+  /* font-style: normal; */
+  src: local('peyda-medium'), url('peyda/Peyda-Medium.ttf') format('opentype');
+}
+
+@font-face {
+  font-family: 'peyda-regular';
+  /* font-weight: 500; */
+  /* font-style: normal; */
+  src: local('peyda-regular'), url('peyda/Peyda-Regular.ttf') format('opentype');
+}
+
+@font-face {
+  font-family: 'peyda-light';
+  /* font-weight: 500;
+  font-style: normal; */
+  src: local('peyda-light'), url('peyda/peyda-light.ttf') format('opentype');
+}
+
+@font-face {
+  font-family: 'peyda-extra-light';
+  /* font-weight: 500; */
+  /* font-style: normal; */
+  src: local('peyda-extralight'), url('peyda/peyda-extralight.ttf') format('opentype');
+}
+
+@font-face {
+  font-family: 'peyda-bold';
+  src: local('peyda-Bold'), url('peyda/Peyda-Bold.ttf') format('opentype');
+}
+
+@font-face {
+  font-family: 'peyda-extra-bold';
+  /* font-weight: 700;
+  font-style: normal; */
+  src: local('peyda-extra-bold'), url('peyda/Peyda-ExtraBold.ttf') format('opentype');
+}
+
+@font-face {
+  font-family: 'peyda-black';
+  /* font-weight: 700;
+  font-style: normal; */
+  src: local('peyda-black'), url('peyda/Peyda-Black.ttf') format('opentype');
+}
+
+@font-face {
+  font-family: 'peyda-semi-bold';
+  /* font-weight: 700;
+  font-style: normal; */
+  src: local('peyda-semi-bold'), url('peyda/Peyda-SemiBold.ttf') format('opentype');
+}

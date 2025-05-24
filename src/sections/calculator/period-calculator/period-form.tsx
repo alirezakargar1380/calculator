@@ -2,6 +2,8 @@ import * as Yup from 'yup';
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { useMemo, useState, useEffect } from 'react';
+// import { format, addDays } from 'date-fns';
+import { format, addDays } from 'date-fns-jalali';
 
 import Box from '@mui/material/Box';
 import Card from '@mui/material/Card';
@@ -11,57 +13,64 @@ import CardHeader from '@mui/material/CardHeader';
 import Typography from '@mui/material/Typography';
 import LoadingButton from '@mui/lab/LoadingButton';
 import InputAdornment from '@mui/material/InputAdornment';
+import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from '@mui/material';
 
 import { useResponsive } from 'src/hooks/use-responsive';
-
-import {
-  _tags,
-  PRODUCT_GENDER_OPTIONS,
-} from 'src/_mock';
-
 import { useSnackbar } from 'src/components/snackbar';
 import FormProvider, {
   RHFTextField,
-  RHFMultiCheckbox,
-  RHFSelect,
 } from 'src/components/hook-form';
-
-import ChartSemi from '../../_examples/extra/chart-view/chart-semi';
-import { IFormBMI } from 'src/types/bmi';
-import { MenuItem, Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from '@mui/material';
 import Scrollbar from 'src/components/scrollbar';
-import { fCurrency, formant } from 'src/utils/format-number';
-import IncrementerButton from '../common/incrementer-button';
-import { DatePicker } from '@mui/x-date-pickers';
+import { DatePicker, LocalizationProvider } from '@mui/x-date-pickers';
+import { AdapterDateFnsJalali } from '@mui/x-date-pickers/AdapterDateFnsJalali';
+import { useLocales } from 'src/locales';
+import { faIR } from 'date-fns-jalali/locale';
 
 // ----------------------------------------------------------------------
 
 type Props = {
-  currentData?: IFormBMI;
+  currentData?: any;
 };
 
-export default function PregnancyForm({ currentData }: Props) {
-  const [result, setResult] = useState<any>(0);
+interface PeriodResult {
+  periodStart: Date;
+  periodEnd: Date;
+  ovulationStart: Date;
+  ovulationEnd: Date;
+}
+
+export default function PeriodForm({ currentData }: Props) {
+  const [results, setResults] = useState<PeriodResult[]>([]);
+  const [showResults, setShowResults] = useState(false);
+
+  const { currentLang } = useLocales();
 
   const mdUp = useResponsive('up', 'md');
-
   const { enqueueSnackbar } = useSnackbar();
 
-  const NewProductSchema = Yup.object().shape({
-    date: Yup.date().required('lower is required'),
-    based: Yup.string().required('based is required'),
+  const PeriodSchema = Yup.object().shape({
+    lastPeriodDate: Yup.date().required('Last period date is required'),
+    periodLength: Yup.number()
+      .required('Period length is required')
+      .min(1, 'Period length must be at least 1 day')
+      .max(10, 'Period length must be less than 10 days'),
+    cycleLength: Yup.number()
+      .required('Cycle length is required')
+      .min(21, 'Cycle length must be at least 21 days')
+      .max(35, 'Cycle length must be less than 35 days'),
   });
 
   const defaultValues = useMemo(
     () => ({
-      date: new Date(),
-      based: '1'
+      lastPeriodDate: new Date(),
+      periodLength: 5,
+      cycleLength: 28,
     }),
     [currentData]
   );
 
   const methods = useForm({
-    resolver: yupResolver(NewProductSchema),
+    resolver: yupResolver(PeriodSchema),
     defaultValues,
   });
 
@@ -81,76 +90,184 @@ export default function PregnancyForm({ currentData }: Props) {
     }
   }, [currentData, defaultValues, reset]);
 
+  const calculatePeriods = (data: any) => {
+    const { lastPeriodDate, periodLength, cycleLength } = data;
+    const numberOfCycles = 6; // Calculate next 6 periods
+
+    const results: PeriodResult[] = [];
+
+    let currentPeriodStart = new Date(lastPeriodDate);
+
+    for (let i = 0; i < numberOfCycles; i++) {
+      // Calculate period end date
+      const periodEnd = addDays(currentPeriodStart, periodLength - 1);
+
+      // Calculate ovulation window (typically 14 days before next period, with a 5-day window)
+      const ovulationMid = addDays(currentPeriodStart, cycleLength - 14);
+      const ovulationStart = addDays(ovulationMid, -2);
+      const ovulationEnd = addDays(ovulationMid, 2);
+
+      console.log('Period Start:', ovulationMid);
+
+      results.push({
+        periodStart: new Date(currentPeriodStart),
+        periodEnd,
+        ovulationStart,
+        ovulationEnd,
+      });
+
+      // Move to next cycle
+      currentPeriodStart = addDays(currentPeriodStart, cycleLength);
+    }
+
+    return results;
+  };
+
   const onSubmit = handleSubmit(async (data) => {
     try {
-
+      const calculatedResults = calculatePeriods(data);
+      console.log(calculatedResults)
+      setResults(calculatedResults);
+      setShowResults(true);
+      enqueueSnackbar('Period calculation completed!');
     } catch (error) {
       console.error(error);
+      enqueueSnackbar('Error calculating periods', { variant: 'error' });
     }
   });
 
-  useEffect(() => { onSubmit() }, [])
+  const formatDateRange = (start: Date, end: Date) => {
+    return `${format(start, 'MMMM. d')} – ${format(end, 'MMMM. d')}`;
+  };
 
-  const renderProperties = (
-    <>
+  const renderForm = (
+    <Grid xs={12}>
+      <Card sx={{
+        ...(currentLang.value === "fa" && {
+          textAlign: 'right',
+        })
+      }}>
+        <CardHeader title={currentLang.value === "fa" ? "محاسبه دوره قاعدگی" : "Period Calculator"} />
+        <Box p={3}>
+          <Typography variant="body1" paragraph>
+            {currentLang.value === "fa" ? 'دوره‌های قاعدگی آینده و محتمل‌ترین روزهای تخمک‌گذاری خود را بر اساس اطلاعات چرخه قاعدگی‌تان محاسبه کنید.' : 'Calculate your future periods and most probable ovulation days based on your cycle information.'}
+          </Typography>
 
-      <Grid xs={12}>
-        <Card>
-          <CardHeader title="Random Number Generator" />
-
-          <Box p={3}>
-            This version of the generator creates a random integer. It can deal with very large integers up to a few thousand digits.
-            <br />
-            <br />
-            <Stack spacing={3} direction={'row'}>
-
-              <RHFSelect name='based' label="Calculate Based on" size="medium">
-                <MenuItem value={'1'}>Due Date</MenuItem>
-                <MenuItem value={'2'}>Last period</MenuItem>
-              </RHFSelect>
-
+          <Stack spacing={3}>
+            <LocalizationProvider dateAdapter={AdapterDateFnsJalali}>
               <DatePicker
                 openTo="year"
                 views={['year', 'month', 'day']}
-                label="Year, month and date"
-                value={values.date}
+                label={currentLang.value === "fa" ? "تاریخ اولین روزِ آخرین باری که پریود شدی" : "First Day of Your Last Period"}
+                value={values.lastPeriodDate}
                 onChange={(newValue) => {
-                  if (newValue)
-                    setValue("date", newValue);
+                  if (newValue) setValue("lastPeriodDate", newValue);
                 }}
                 slotProps={{
-                  textField: {
-                    fullWidth: true,
-                    // margin: 'normal',
-                  },
+                  textField: { fullWidth: true },
                 }}
               />
+            </LocalizationProvider>
 
-            </Stack>
-            <LoadingButton type="submit" variant="contained" size="medium" sx={{ width: 'fit-content', mt: 3 }} loading={isSubmitting}>
-              Calculate
+            <RHFTextField
+              name="periodLength"
+              label={currentLang.value === "fa" ? "آخرین بار چند روز طول کشید؟" : "How long did it last?"}
+              type="number"
+              InputProps={{
+                endAdornment: <InputAdornment position="end">days</InputAdornment>,
+              }}
+            />
+
+            <RHFTextField
+              name="cycleLength"
+              label={currentLang.value === "fa" ? "میانگین هر دوره ای که پریود میشی" : "Average Length of Cycles"}
+              type="number"
+              InputProps={{
+                endAdornment: <InputAdornment position="end">days</InputAdornment>,
+              }}
+            />
+
+            <LoadingButton
+              type="submit"
+              variant="contained"
+              size="large"
+              loading={isSubmitting}
+            >
+              {currentLang.value === "fa" ? "محاسبه" : "Calculate"}
             </LoadingButton>
-          </Box>
+          </Stack>
+        </Box>
+      </Card>
+    </Grid>
+  );
 
-        </Card>
-      </Grid>
+  const renderResults = (
+    <Grid xs={12}>
+      <Card sx={{
+        ...(currentLang.value === "fa" && {
+          textAlign: 'right',
+          direction: 'rtl',
+        })
+      }}>
+        <CardHeader title={currentLang.value === "fa" ? 'تقویم پریود شما' : "Your Period Calendar"} />
+        <Box p={3}>
+          <Grid container spacing={3}>
+            <Grid xs={12} md={6}>
+              <Typography variant="h6" gutterBottom>
+                {currentLang.value === "fa" ? "تاریخ های پریود" : "Period Dates"}
+              </Typography>
+              <TableContainer>
+                <Scrollbar>
+                  <Table>
+                    <TableBody>
+                      {results.map((result, index) => (
+                        <TableRow key={`period-${index}`}>
+                          <TableCell sx={{
+                            ...(currentLang.value === "fa" && {
+                              textAlign: 'right',
+                            })
+                          }}>{formatDateRange(result.periodStart, result.periodEnd)}</TableCell>
+                        </TableRow>
+                      ))}
+                    </TableBody>
+                  </Table>
+                </Scrollbar>
+              </TableContainer>
+            </Grid>
 
-      {isSubmitted && (
-        <Grid xs={12}>
-          <Card>
-            <CardHeader title="Result" color='#1c9035' sx={{ bgcolor: 'greenyellow', pb: 3 }} />
-            <Box p={3}>{formant(result)}</Box>
-          </Card>
-        </Grid>
-      )}
-
-    </>
+            <Grid xs={12} md={6}>
+              <Typography variant="h6" gutterBottom>
+                {currentLang.value === "fa" ? "محتمل‌ترین روزهای تخمک‌گذاری" : "Most Probable Ovulation Days"}
+              </Typography>
+              <TableContainer>
+                <Scrollbar>
+                  <Table>
+                    <TableBody>
+                      {results.map((result, index) => (
+                        <TableRow key={`ovulation-${index}`}>
+                          <TableCell sx={{
+                            ...(currentLang.value === "fa" && {
+                              textAlign: 'right',
+                            })
+                          }}>{formatDateRange(result.ovulationStart, result.ovulationEnd)}</TableCell>
+                        </TableRow>
+                      ))}
+                    </TableBody>
+                  </Table>
+                </Scrollbar>
+              </TableContainer>
+            </Grid>
+          </Grid>
+        </Box>
+      </Card>
+    </Grid>
   );
 
   return (
     <FormProvider methods={methods} onSubmit={onSubmit}>
       <Grid container spacing={3}>
-        {renderProperties}
+        {renderForm}
+        {showResults && renderResults}
       </Grid>
     </FormProvider>
   );

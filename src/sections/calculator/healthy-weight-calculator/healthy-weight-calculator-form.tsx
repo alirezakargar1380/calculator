@@ -27,6 +27,7 @@ import FormProvider, {
 
 import ChartSemi from '../../_examples/extra/chart-view/chart-semi';
 import { IFormBMI } from 'src/types/bmi';
+import { useLocales, useTranslate } from 'src/locales';
 
 // ----------------------------------------------------------------------
 
@@ -45,6 +46,9 @@ export default function HealthyWeightCalculatorForm({ currentData }: Props) {
     obese_class_ii: '',
     obese_class_iii: '',
   });
+
+  const { currentLang } = useLocales();
+  const { t } = useTranslate();
 
   const mdUp = useResponsive('up', 'md');
 
@@ -98,10 +102,10 @@ export default function HealthyWeightCalculatorForm({ currentData }: Props) {
         submit: true,
         severely_underweight: severelyUnderweightThreshold,
         underweight: underweightThreshold,
-        normal: `${minHealthyWeight.toFixed(1)} kg - ${maxHealthyWeight.toFixed(1)}`,
-        overweight: `${overweightThreshold.toFixed(1)} kg - ${obeseClass1Threshold.toFixed(1)}`,
-        obese_class_i: `${obeseClass1Threshold.toFixed(1)} kg - ${obeseClass2Threshold.toFixed(1)}`,
-        obese_class_ii: `${obeseClass2Threshold.toFixed(1)} kg - ${obeseClass3Threshold.toFixed(1)}`,
+        normal: `${minHealthyWeight.toFixed(1)} ${t('page.health.unit')} - ${maxHealthyWeight.toFixed(1)}`,
+        overweight: `${overweightThreshold.toFixed(1)} ${t('page.health.unit')} - ${obeseClass1Threshold.toFixed(1)}`,
+        obese_class_i: `${obeseClass1Threshold.toFixed(1)} ${t('page.health.unit')} - ${obeseClass2Threshold.toFixed(1)}`,
+        obese_class_ii: `${obeseClass2Threshold.toFixed(1)} ${t('page.health.unit')} - ${obeseClass3Threshold.toFixed(1)}`,
         obese_class_iii: `${obeseClass3Threshold.toFixed(1)}`,
       })
 
@@ -123,14 +127,14 @@ export default function HealthyWeightCalculatorForm({ currentData }: Props) {
 
             <RHFTextField
               name="height"
-              label="Height"
+              label={t('page.health.height')}
               placeholder="0"
               type="number"
               InputProps={{
                 endAdornment: (
                   <InputAdornment position="start">
                     <Box component="span" sx={{ color: 'text.disabled' }}>
-                      Cm
+                      {currentLang.value === 'fa' ? 'سانتی متر' : 'Cm'}
                     </Box>
                   </InputAdornment>
                 ),
@@ -139,39 +143,47 @@ export default function HealthyWeightCalculatorForm({ currentData }: Props) {
             />
 
             <LoadingButton type="submit" variant="contained" size="medium" sx={{ width: 'fit-content' }} loading={isSubmitting}>
-              Calculate
+              {t('cal_btn')}
             </LoadingButton>
 
           </Stack>
         </Card>
       </Grid>
 
-      <Grid md={7}>
+      <Grid xs={12} md={7}>
         {result.submit && (
-          <Box>
-            <Typography variant='h3' mb={1} bgcolor={'#1c905f'} borderRadius={'8px'} px={1}>Result:</Typography>
+          <Box sx={{
+            ...(currentLang.value === 'fa' && {
+              textAlign: 'right',
+              direction: 'rtl'
+            })
+          }}>
+            <Typography variant='h3' mb={1} bgcolor={'#1c905f'} borderRadius={'8px'} px={1} color={'#fff'}>{t('page.health.result.title')}:</Typography>
             <Box whiteSpace={'break-spaces'}>
-              for weight {values.height} kg:
+              <Typography pb={0} fontSize={18} fontFamily={'peyda-bold'}>{t('page.health.result.for_weight')} {values.height} {t('page.health.unit')}:</Typography>
               <br />
+              {/* <br /> */}
+              {/* Severely Underweight Threshold */}
+              {t('page.health.s_u_t')}: <b style={{ background: '#c72222', color: '#fff', padding: '3px 6px' }}>{t('page.health.result.below')} {result.severely_underweight} {t('page.health.unit')}</b>
               <br />
-              Severely Underweight Threshold: <b style={{ background: '#c72222' }}>Below {result.severely_underweight} kg</b>
-              <br />
-              Underweight Threshold: Below {result.underweight} kg
+              {/* Underweight Threshold */}
+              {t('page.health.u_t')}: {t('page.health.result.below')} {result.underweight} {t('page.health.unit')}
               <br />
               <Typography display={'flex'} alignItems={'center'}>
-                Healthy Weight Range:
-                <Typography variant='body1' ml={1} mb={1} width={'fit-content'} bgcolor={'#1c9035'} borderRadius={'8px'} px={1} my={1}>
-                  {result.normal} kg
+                {/* Healthy Weight Range: */}
+                {t('page.health.h_w_r')}:
+                <Typography variant='body1' ml={1} mb={1} fontSize={14} width={'fit-content'} bgcolor={'#1c9035'} color={'#fff'} px={1} my={1}>
+                  {result.normal} {t('page.health.unit')}
                 </Typography>
               </Typography>
 
-              Overweight Threshold: {result.overweight} kg
+              {t('page.health.o_t')}: {result.overweight} {t('page.health.unit')}
               <br />
-              Obese Class I Threshold: {result.obese_class_i} kg
+              {t('page.health.o_c_i_t')}: {result.obese_class_i} {t('page.health.unit')}
               <br />
-              Obese Class II Threshold: {result.obese_class_ii} kg
+              {t('page.health.o_c_ii_t')}: {result.obese_class_ii} {t('page.health.unit')}
               <br />
-              Obese Class III Threshold: Above {result.obese_class_iii} kg
+              {t('page.health.o_c_iii_t')}: {t('page.health.result.above')} {result.obese_class_iii} {t('page.health.unit')}
             </Box>
           </Box>
         )}

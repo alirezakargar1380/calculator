@@ -1,24 +1,39 @@
-// ----------------------------------------------------------------------
+'use client';
 
 export function localStorageAvailable() {
   try {
-    const key = '__some_random_key_you_are_not_going_to_use__';
-    window.localStorage.setItem(key, key);
-    window.localStorage.removeItem(key);
-    return true;
-  } catch (error) {
+    if (typeof window !== 'undefined') {
+      const test = '__storage_test__';
+      window.localStorage.setItem(test, test);
+      window.localStorage.removeItem(test);
+      return true;
+    }
+    return false;
+  } catch (e) {
     return false;
   }
 }
 
 export function localStorageGetItem(key: string, defaultValue = '') {
-  const storageAvailable = localStorageAvailable();
-
-  let value;
-
-  if (storageAvailable) {
-    value = localStorage.getItem(key) || defaultValue;
+  try {
+    if (!localStorageAvailable()) {
+      return defaultValue;
+    }
+    
+    const value = window.localStorage.getItem(key);
+    return value || defaultValue;
+  } catch (error) {
+    console.error('Error accessing localStorage:', error);
+    return defaultValue;
   }
+}
 
-  return value;
+export function localStorageSetItem(key: string, value: string) {
+  try {
+    if (localStorageAvailable()) {
+      localStorage.setItem(key, value);
+    }
+  } catch (error) {
+    console.error('Error setting localStorage:', error);
+  }
 }

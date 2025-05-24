@@ -76,10 +76,10 @@ export default function Header() {
           {mdUp && <NavDesktop data={navConfig} />}
 
           <Stack alignItems="center" direction={{ xs: 'row', md: 'row-reverse' }}>
-<SettingsButton />
+            <SettingsButton />
             <LanguagePopover />
 
-            
+
 
             {!mdUp && <NavMobile data={navConfig} />}
           </Stack>
