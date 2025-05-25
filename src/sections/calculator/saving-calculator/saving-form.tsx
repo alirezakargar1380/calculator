@@ -332,7 +332,7 @@ export default function SavingForm({ currentData }: Props) {
       <Card>
         <CardHeader title="Result" />
         <Box p={3}>
-          <Box mb={2}>total Interest earned: ${results.totalInterest}</Box>
+          <Box mb={2}>total Interest earned: ${fCurrency(results.totalInterest)}</Box>
           <TableContainer sx={{ overflow: 'unset' }}>
             <Scrollbar>
               <Table>
